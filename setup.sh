@@ -1,7 +1,7 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 ## setup script for petalinux 2023.1
-##
-## expects an existing pre-configured petalinux project
+## apply provided .cfg config fragments to project
+## apply provided .cfg config fragments to rootfs
 
 die()
 {
@@ -30,7 +30,7 @@ apply_cfg_fragment()
     DO_REPLACE="$( grep "$OPT_CONFIG" -r $CONFIG_FILE )" || true
     if [ -n "$DO_REPLACE" ]; then
         sed -i "\|${OPT_CONFIG}|s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
-        grep $OPT_CONFIG -HIrn --color $CONFIG_FILE    
+        grep $OPT_CONFIG -HIrn --color $CONFIG_FILE
     else
         echo "$OPT_SET" >> "$CONFIG_FILE"
     fi
@@ -68,16 +68,16 @@ PETALINUXDIR="$( readlink -f $( dirname ${0} ) )"
 cd "${PETALINUXDIR}"
 petalinux-config --get-hw-description="${RESOURCEDIR_XSA}" --silentconfig
 
-## TODO rm - personal setting for development, rm for productive usage        
-RESOURCEDIR=~/"workspace/0000__petalinux"
-if [ -e "${RESOURCEDIR}/sstate-cache" ]; then
-	cd "${PETALINUXDIR}/build/"
-	ln -sf "${RESOURCEDIR}/sstate-cache" .
-fi
-if [ -e "${RESOURCEDIR}/downloads" ]; then
-	cd "${PETALINUXDIR}/build/"
-	ln -sf "${RESOURCEDIR}/downloads" .
-fi
+### TODO rm - personal setting for development, rm for productive usage        
+#RESOURCEDIR=~/"workspace/0000__petalinux"
+#if [ -e "${RESOURCEDIR}/sstate-cache" ]; then
+#	cd "${PETALINUXDIR}/build/"
+#	ln -sf "${RESOURCEDIR}/sstate-cache" .
+#fi
+#if [ -e "${RESOURCEDIR}/downloads" ]; then
+#	cd "${PETALINUXDIR}/build/"
+#	ln -sf "${RESOURCEDIR}/downloads" .
+#fi
 
 ## petalinux-config - basics, project name and yocto MACHINE...
 CONFIG_PETALINUX=(
@@ -151,5 +151,5 @@ if [ -z "$( grep "include conf/petalinuxbsp.conf" -r ./build/conf/local.conf )" 
     echo "include conf/petalinuxbsp.conf" >> ./build/conf/local.conf
 fi
 
-#rm -v ./setup.sh
+rm -v ./setup.sh
 echo "READY."
