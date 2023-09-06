@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -ex
 ## setup script for petalinux 2023.1
 ##
 ## expects an existing pre-configured petalinux project
@@ -15,6 +15,9 @@ apply_cfg_fragment()
     OPT_SET="$OPT_RAW"
     CONFIG_FILE="${2}"  ## arg2: config file
 
+    test -z "$OPT_RAW" && return
+    test -z "$OPT_SET" && return
+
     ## option set or disabled?
     DO_DISABLED="$( echo ${OPT_RAW} | grep "^# " )" || true
     if [ -n "$DO_DISABLED" ]; then
@@ -26,7 +29,8 @@ apply_cfg_fragment()
     ## replace or append option?
     DO_REPLACE="$( grep "$OPT_CONFIG" -r $CONFIG_FILE )" || true
     if [ -n "$DO_REPLACE" ]; then
-        sed -i "\|${OPT_CONFIG}|s|.*|${OPT_SET}|"  "$CONFIG_FILE"
+        sed -i "\|${OPT_CONFIG}|s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
+        grep $OPT_CONFIG -HIrn --color $CONFIG_FILE    
     else
         echo "$OPT_SET" >> "$CONFIG_FILE"
     fi
@@ -88,6 +92,7 @@ CONFIG_PETALINUX=(
 identify_machine_parent
 
 ## petalinux-config - read and append config fragments according to boot mode
+## NB: for the read-approach the .cfg file must have a final empty line/EOF, if not the last option will be omitted (fix this?)
 cd "${PETALINUXDIR}"
 if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}.cfg" ]; then
     OLDIFS="$IFS"
@@ -146,5 +151,5 @@ if [ -z "$( grep "include conf/petalinuxbsp.conf" -r ./build/conf/local.conf )" 
     echo "include conf/petalinuxbsp.conf" >> ./build/conf/local.conf
 fi
 
-rm -v ./setup.sh
+#rm -v ./setup.sh
 echo "READY."
