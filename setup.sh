@@ -145,4 +145,6 @@ petalinux-config --silentconfig
 if [ -z "$( grep "include conf/petalinuxbsp.conf" -r ./build/conf/local.conf )" ]; then
     echo "include conf/petalinuxbsp.conf" >> ./build/conf/local.conf
 fi
+
+rm -v ./setup.sh
 echo "READY."
