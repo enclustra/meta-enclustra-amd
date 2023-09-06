@@ -1,4 +1,4 @@
-#!/bin/bash -xe
+#!/bin/bash -e
 ## setup script for petalinux 2023.1
 ##
 ## expects an existing pre-configured petalinux project
