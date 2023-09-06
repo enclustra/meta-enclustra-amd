@@ -85,6 +85,8 @@ rm -rf $PROOT/enclustra
 rm -rf $PROOT/project-spec
 echo "petalinux artifacts removed"
 
+rm -rf ./petalinux-convert.sh
+
 echo
 echo "now, enter the bitbake environment:"
 echo "$ source ./enclustra-init-build-env"
