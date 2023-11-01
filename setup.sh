@@ -43,15 +43,14 @@ identify_machine_parent()
 	*-zx1-*) ;&
 	*-zx2-*) ;&
 	*-zx3-*)  MACHINE_PARENT_TYPE="zynq" ;;
-
 	*-xu1-*) ;&
 	*-xu3-*) ;&
 	*-xu5-*) ;&
 	*-xu6-*) ;&
+        *-xu6cg-*) ;&
 	*-xu8-*) ;&
 	*-xu9-*) MACHINE_PARENT_TYPE="zynqMP" ;;
-
-        *) die "MACHINE_PARENT_TYPE: MACHINE '$MACHINE' cannot be parsed" ;;
+        *) die "setup.sh: MACHINE_PARENT_TYPE: MACHINE '$MACHINE' cannot be parsed" ;;
     esac
 }
 

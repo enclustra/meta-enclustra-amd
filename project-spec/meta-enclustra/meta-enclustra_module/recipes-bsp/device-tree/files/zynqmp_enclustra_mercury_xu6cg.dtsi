@@ -1,0 +1,89 @@
+/ {
+	aliases {
+		ethernet0 = &gem0;
+		i2c0 = &i2c0;
+		serial0 = &uart0;
+		spi0 = &qspi;
+	};
+	pmu {
+		/delete-property/ interrupt-affinity;
+		interrupt-affinity = <&cpu0>, <&cpu1>;
+	};
+};
+
+&gem0 {
+	status = "okay";
+	/delete-property/ local-mac-address;
+	phy-mode = "rgmii-id";
+	phy-handle = <&phy0>;
+	phy0: phy@3 {
+		reg = <3>;
+
+		/* Delays for KSZ9031 PHY */
+		txc-skew-ps = <1800>;
+		txen-skew-ps = <420>;
+		txd0-skew-ps = <420>;
+		txd1-skew-ps = <420>;
+		txd2-skew-ps = <420>;
+		txd3-skew-ps = <420>;
+
+		rxc-skew-ps = <900>;
+		rxdv-skew-ps = <420>;
+		rxd0-skew-ps = <420>;
+		rxd1-skew-ps = <420>;
+		rxd2-skew-ps = <420>;
+		rxd3-skew-ps = <420>;
+
+		/* Delays for KSZ9131 PHY */
+		txc-skew-psec = <900>;
+		txen-skew-psec = <0>;
+		txd0-skew-psec = <0>;
+		txd1-skew-psec = <0>;
+		txd2-skew-psec = <0>;
+		txd3-skew-psec = <0>;
+
+		rxc-skew-psec = <0>;
+		rxdv-skew-psec = <0>;
+		rxd0-skew-psec = <0>;
+		rxd1-skew-psec = <0>;
+		rxd2-skew-psec = <0>;
+		rxd3-skew-psec = <0>;
+	};
+};
+
+&qspi {
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	is-dual = <0>;
+	num-cs = <1>;
+	flash0: flash@0 {
+		reg = <0x0>;
+		compatible = "spansion,s25fl512s", "jedec,spi-nor";
+		spi-rx-bus-width = <0x4>;
+		spi-tx-bus-width = <0x4>;
+		spi-max-frequency = <50000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+};
+
+&psgtr {
+	status = "okay";
+	clocks = <&ref100>, <&ref27>;
+	clock-names = "ref2", "ref3";
+};
+
+&amba {
+	ref100: ref100M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+	ref27: ref27M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <27000000>;
+	};
+};
+

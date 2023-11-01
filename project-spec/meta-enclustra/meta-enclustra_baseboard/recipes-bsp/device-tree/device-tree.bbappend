@@ -13,6 +13,9 @@ FILESEXTRAPATHS:prepend:refdes-xu5-st1 := "${THISDIR}/files/refdes-xu5-st1:${SYS
 FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6-st1:${SYSCONFIG_PATH}:"
 
+FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6cg-pe1:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6cg-st1:${SYSCONFIG_PATH}:"
+
 FILESEXTRAPATHS:prepend:refdes-xu7-pe1 := "${THISDIR}/files/refdes-xu7-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu7-st1 := "${THISDIR}/files/refdes-xu7-st1:${SYSCONFIG_PATH}:"
 
@@ -39,6 +42,7 @@ FILESEXTRAPATHS:prepend:refdes-zx5-st1 := "${THISDIR}/files/refdes-zx5-st1:${SYS
 ENCLUSTRA_SELECT_ARCH := "zynq"
 ENCLUSTRA_SELECT_ARCH:zynqmp-generic := "zynqmp"
 
+## TODO better remove in case " file://system-user.dtsi" before, due to wrong template setup    
 SRC_URI:append = " file://system-user.dtsi"
 
 ## enclustra st1 dtsi
@@ -63,6 +67,9 @@ YAML_DT_BOARD_FLAGS:refdes-xu5-st1 = "{BOARD template}"
 
 YAML_DT_BOARD_FLAGS:refdes-xu6-pe1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-xu6-st1 = "{BOARD template}"
+
+YAML_DT_BOARD_FLAGS:refdes-xu6cg-pe1 = "{BOARD template}"
+YAML_DT_BOARD_FLAGS:refdes-xu6cg-st1 = "{BOARD template}"
 
 YAML_DT_BOARD_FLAGS:refdes-xu7-pe1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-xu7-st1 = "{BOARD template}"
