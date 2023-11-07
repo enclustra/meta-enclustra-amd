@@ -151,5 +151,5 @@ if [ -z "$( grep "include conf/petalinuxbsp.conf" -r ./build/conf/local.conf )" 
     echo "include conf/petalinuxbsp.conf" >> ./build/conf/local.conf
 fi
 
-rm -v ./setup.sh
+#rm -v ./setup.sh
 echo "READY."
