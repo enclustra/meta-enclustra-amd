@@ -84,8 +84,8 @@ CONFIG_PETALINUX=(
     "CONFIG_SUBSYSTEM_HOSTNAME=\"${PETALINUX_PROJECT_NAME}\""
     "CONFIG_SUBSYSTEM_PRODUCT=\"${PETALINUX_PROJECT_NAME}\""
     "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
-    'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra_baseboard"'
-    'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra_module"'
+    'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
+    'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
 )
 
 ## identify MACHINE_PARENT_TYPE: zynq or zynqMP
