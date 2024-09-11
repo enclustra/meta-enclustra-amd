@@ -132,7 +132,14 @@ done
 ## and not in a .bb such as e.g. the image.bb)
 cd "${PETALINUXDIR}"
 MACHINEOVERRIDE="enclustra-${BOOTMODE}"
-echo "MACHINEOVERRIDES =. \"${MACHINEOVERRIDE}:\"" > ./build/conf/enclustra.inc
+echo "MACHINEOVERRIDES =. \"${MACHINEOVERRIDE}:\""                  > ./build/conf/enclustra.inc
+echo "EXTRA_USERS_SUDOERS=\"petalinux ALL=(ALL) NOPASSWD: ALL;\""  >> ./build/conf/enclustra.inc
+
+## fix: remove nfs packages (default in 23.1)
+#echo 'DISTRO_FEATURES:remove = "nfs"' >> ./build/conf/enclustra.inc
+#echo 'DISTRO_FEATURES_DEFAULT:remove = "nfs"' >> ./build/conf/enclustra.inc
+#echo 'IMAGE_INSTALL:remove = "nfs-utils nfs-client"' >> ./build/conf/enclustra.inc
+#echo 'IMAGE_INSTALL:pn-petalinux-image-minimal:remove = "nfs-utils nfs-client"' >> ./build/conf/enclustra.inc
 
 if [ -z "$(grep "require conf/enclustra.inc" -r ./build/conf/local.conf)" ]; then
 	echo "require conf/enclustra.inc" >> ./build/conf/local.conf
