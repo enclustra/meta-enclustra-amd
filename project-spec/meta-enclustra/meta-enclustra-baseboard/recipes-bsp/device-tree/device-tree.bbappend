@@ -13,6 +13,9 @@ FILESEXTRAPATHS:prepend:refdes-xu5-st1 := "${THISDIR}/files/refdes-xu5-st1:${SYS
 FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6-st1:${SYSCONFIG_PATH}:"
 
+FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu61-pe1:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu61-st1:${SYSCONFIG_PATH}:"
+
 FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6cg-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6cg-st1:${SYSCONFIG_PATH}:"
 
@@ -67,6 +70,9 @@ YAML_DT_BOARD_FLAGS:refdes-xu5-st1 = "{BOARD template}"
 
 YAML_DT_BOARD_FLAGS:refdes-xu6-pe1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-xu6-st1 = "{BOARD template}"
+
+YAML_DT_BOARD_FLAGS:refdes-xu61-pe1 = "{BOARD template}"
+YAML_DT_BOARD_FLAGS:refdes-xu61-st1 = "{BOARD template}"
 
 YAML_DT_BOARD_FLAGS:refdes-xu6cg-pe1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-xu6cg-st1 = "{BOARD template}"
