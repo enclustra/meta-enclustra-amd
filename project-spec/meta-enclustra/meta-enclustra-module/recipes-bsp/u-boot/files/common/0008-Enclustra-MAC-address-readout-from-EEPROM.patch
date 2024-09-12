@@ -1,6 +1,6 @@
-From b0158bb3ae23222674a5217fd2ae7c381dc9a10f Mon Sep 17 00:00:00 2001
+From f76bf9528d15adf67a7eb20b25fd81dbfbeab90a Mon Sep 17 00:00:00 2001
 From: Lothar Rubusch <lothar.rubusch@enclustra.com>
-Date: Sun, 21 May 2023 16:58:00 +0000
+Date: Thu, 12 Sep 2024 17:06:02 +0000
 Subject: [PATCH] Enclustra MAC address readout from EEPROM
 
 Re-issued patch.
@@ -21,7 +21,7 @@ Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
  create mode 100644 include/enclustra/eeprom-mac.h
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 1d13b64169..f8b050c4c1 100644
+index 7eb38c3e94..abcd07d788 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
 @@ -83,6 +83,14 @@ config GATEWORKS_SC
@@ -40,10 +40,10 @@ index 1d13b64169..f8b050c4c1 100644
          bool "Rockchip e-fuse support"
  	depends on MISC
 diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index c9cc117755..08ecf73665 100644
+index 562cef624a..b37bc09627 100644
 --- a/drivers/misc/Makefile
 +++ b/drivers/misc/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_ALTERA_SYSID) += altera_sysid.o
+@@ -33,6 +33,7 @@ obj-$(CONFIG_ALTERA_SYSID) += altera_sysid.o
  obj-$(CONFIG_ATSHA204A) += atsha204a-i2c.o
  obj-$(CONFIG_CBMEM_CONSOLE) += cbmem_console.o
  obj-$(CONFIG_DS4510)  += ds4510.o
@@ -135,5 +135,5 @@ index 0000000000..3ec69ca3a3
 +
 +int atsha204_get_mac(u8 *buffer);
 -- 
-2.34.1
+2.37.6
 

@@ -1,6 +1,6 @@
-From 9934bc40bd103eb363db0d1f5e720467f96834b1 Mon Sep 17 00:00:00 2001
+From 5f5b49e070f25225d028836787b86417c545df7e Mon Sep 17 00:00:00 2001
 From: Lothar Rubusch <lothar.rubusch@enclustra.com>
-Date: Sun, 21 May 2023 19:01:50 +0000
+Date: Thu, 12 Sep 2024 17:10:25 +0000
 Subject: [PATCH] Enclustra Zynqmp Board Patch
 
 re-issued patch from:
@@ -21,7 +21,7 @@ Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
  create mode 100644 board/xilinx/common/enclustra.c
 
 diff --git a/board/xilinx/Kconfig b/board/xilinx/Kconfig
-index 4f0776e8bd..b18f885f12 100644
+index 843198fa0d..93e3ed0ecb 100644
 --- a/board/xilinx/Kconfig
 +++ b/board/xilinx/Kconfig
 @@ -41,7 +41,7 @@ config XILINX_PS_INIT_FILE
@@ -33,7 +33,7 @@ index 4f0776e8bd..b18f885f12 100644
  	default 0x1000 if ARCH_VERSAL || ARCH_VERSAL_NET
  	default 0x8000 if MICROBLAZE
  	default 0x100000 if ARCH_ZYNQ || ARCH_ZYNQMP
-@@ -58,6 +58,21 @@ config BOOT_SCRIPT_OFFSET
+@@ -59,6 +59,21 @@ config BOOT_SCRIPT_OFFSET
  	help
  	   Specifies distro boot script offset in NAND/QSPI/NOR flash.
  
@@ -155,11 +155,11 @@ index 0000000000..3ab0a0dd84
 +}
 +
 diff --git a/board/xilinx/zynqmp/Makefile b/board/xilinx/zynqmp/Makefile
-index 732f909fc2..ca33fefdd6 100644
+index 204e4fadf0..1c83f257c8 100644
 --- a/board/xilinx/zynqmp/Makefile
 +++ b/board/xilinx/zynqmp/Makefile
 @@ -4,6 +4,7 @@
- # Michal Simek <michal.simek@xilinx.com>
+ # Michal Simek <michal.simek@amd.com>
  
  obj-y	:= zynqmp.o
 +obj-y	+= ../common/enclustra.o
@@ -167,10 +167,10 @@ index 732f909fc2..ca33fefdd6 100644
  ifneq ($(CONFIG_XILINX_PS_INIT_FILE),"")
  PS_INIT_FILE := $(shell cd $(srctree); readlink -f $(CONFIG_XILINX_PS_INIT_FILE))
 diff --git a/common/board_r.c b/common/board_r.c
-index f7fb7df54a..6f883ffc41 100644
+index a7967849dc..8527bb015b 100644
 --- a/common/board_r.c
 +++ b/common/board_r.c
-@@ -762,6 +762,12 @@ static init_fnc_t init_sequence_r[] = {
+@@ -732,6 +732,12 @@ static init_fnc_t init_sequence_r[] = {
  #ifdef CONFIG_BOARD_LATE_INIT
  	board_late_init,
  #endif
@@ -184,10 +184,10 @@ index f7fb7df54a..6f883ffc41 100644
  	INIT_FUNC_WATCHDOG_RESET
  	initr_scsi,
 diff --git a/include/init.h b/include/init.h
-index d40d11f33d..c42e5fbd1b 100644
+index d57a24fd00..8525883cb1 100644
 --- a/include/init.h
 +++ b/include/init.h
-@@ -311,6 +311,8 @@ int board_early_init_f(void);
+@@ -315,6 +315,8 @@ int board_early_init_f(void);
  /* manipulate the U-Boot fdt before its relocation */
  int board_fix_fdt(void *rw_fdt_blob);
  int board_late_init(void);
@@ -197,5 +197,5 @@ index d40d11f33d..c42e5fbd1b 100644
  int board_early_init_r(void);
  
 -- 
-2.34.1
+2.37.6
 
