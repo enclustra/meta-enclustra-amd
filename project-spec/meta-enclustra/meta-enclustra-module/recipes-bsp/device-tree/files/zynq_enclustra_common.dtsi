@@ -18,26 +18,27 @@
 	phy-mode = "rgmii-id";
 	/delete-property/ local-mac-address;
 
-	phy0: ethernet-phy@3 {
-	    reg = <3>;
+	mdio {
+		phy0: ethernet-phy@3 {
+			reg = <3>;
 
-	    txc-skew-ps = <1800>;
-	    txen-skew-ps = <420>;
+			txc-skew-ps = <1800>;
+			txen-skew-ps = <420>;
 
-	    txd0-skew-ps = <420>;
-	    txd1-skew-ps = <420>;
-	    txd2-skew-ps = <420>;
-	    txd3-skew-ps = <420>;
+			txd0-skew-ps = <420>;
+			txd1-skew-ps = <420>;
+			txd2-skew-ps = <420>;
+			txd3-skew-ps = <420>;
 
-	    rxc-skew-ps = <900>;
-	    rxdv-skew-ps = <420>;
+			rxc-skew-ps = <900>;
+			rxdv-skew-ps = <420>;
 
-	    rxd0-skew-ps = <420>;
-	    rxd1-skew-ps = <420>;
-	    rxd2-skew-ps = <420>;
-	    rxd3-skew-ps = <420>;
+			rxd0-skew-ps = <420>;
+			rxd1-skew-ps = <420>;
+			rxd2-skew-ps = <420>;
+			rxd3-skew-ps = <420>;
+		};
 	};
-
 };
 
 &i2c0 {
@@ -77,6 +78,6 @@
 };
 
 &clkc {
-	fclk-enable = <0x3>;
+	fclk-enable = <0xF>;
 	ps-clk-frequency = <33333333>;
 };

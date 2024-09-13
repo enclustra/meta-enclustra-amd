@@ -1,0 +1,80 @@
+#include <dt-bindings/phy/phy.h>
+
+&usb0 {
+	status = "okay";
+};
+
+&dwc3_0 {
+	status = "okay";
+	dr_mode = "host";
+	snps,usb3_lpm_capable;
+	phy-names = "usb3-phy";
+	/* psgtr_phandle....lane number... controller_type...instance....refclk */
+	phys = <&psgtr 1 PHY_TYPE_USB3 0 0>;
+	maximum-speed = "super-speed";
+};
+
+&sdhci1 {
+	status = "okay";
+    // uncomment next line for SD 2.0 boot
+    // no-1-8-v; 
+	wp-inverted;
+};
+
+&zynqmp_dpdma {
+	status = "okay";
+};
+
+&zynqmp_dpsub {
+	status = "okay";
+	phy-names = "dp-phy0", "dp-phy1";
+	/* psgtr_phandle....lane number... controller_type...instance....refclk */
+    phys = <&psgtr 3 PHY_TYPE_DP 0 1>, <&psgtr 2 PHY_TYPE_DP 1 1>;
+    dma-names = "vid0", "vid1", "vid2", "gfx0";
+	dmas = <&zynqmp_dpdma 0>, <&zynqmp_dpdma 1>, <&zynqmp_dpdma 2>, <&zynqmp_dpdma 3>;
+};
+
+
+&zynqmp_dp_snd_pcm0 {
+    status = "disabled";
+};
+
+&zynqmp_dp_snd_pcm1 {
+    status = "disabled";
+};
+
+&zynqmp_dp_snd_card0 {
+    status = "disabled";
+};
+
+&zynqmp_dp_snd_codec0 {
+    status = "disabled";
+};
+
+&pcie {
+    status = "okay";
+    xlnx,bar0-enable = <0x0>;
+    xlnx,bar1-enable = <0x0>;
+    xlnx,bar2-enable = <0x0>;
+    xlnx,bar3-enable = <0x0>;
+    xlnx,bar4-enable = <0x0>;
+    xlnx,bar5-enable = <0x0>;
+    xlnx,pcie-mode = "Root Port";
+    xlnx,tz-nonsecure = <0x0>;
+    phy-names = "pcie0-phy";
+    /* psgtr_phandle....lane number... controller_type...instance....refclk */
+    phys = <&psgtr 0 PHY_TYPE_PCIE 0 0>;
+};
+
+&i2c0 {
+    status = "okay";
+    clock-frequency = <100000>;
+    eeprom@50 {
+        compatible = "atmel,24c08";
+        reg = <0x50>;
+    };
+    usb_hub@2C {
+        compatible = "microchip,usb2512b";
+        reg = <0x2C>;
+    };
+};
