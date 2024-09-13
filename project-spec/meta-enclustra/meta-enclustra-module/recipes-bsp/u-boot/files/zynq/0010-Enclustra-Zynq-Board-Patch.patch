@@ -1,6 +1,6 @@
-From 805d9ba9daa58b2646b488665a342be151ffccc1 Mon Sep 17 00:00:00 2001
+From 193e16d08946768d5f73f49145e4496d6a8d54d7 Mon Sep 17 00:00:00 2001
 From: Lothar Rubusch <lothar.rubusch@enclustra.com>
-Date: Sun, 28 May 2023 13:17:37 +0000
+Date: Fri, 13 Sep 2024 14:59:16 +0000
 Subject: [PATCH] Zynq Board Patch
 
 Adjusted and re-patched, taken from:
@@ -18,14 +18,16 @@ Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
  board/xilinx/zynq/board_mux.c    | 147 +++++++++++++++++++++++++++++++
  common/board_r.c                 |   6 ++
  drivers/mtd/nand/raw/zynq_nand.c |   7 ++
- drivers/spi/zynq_qspi.c          |  23 +++--
+ drivers/spi/zynq_qspi.c          |  18 +++-
+ drivers/spi/zynq_qspi.c.rej      |  14 +++
  include/init.h                   |   2 +
- 8 files changed, 289 insertions(+), 9 deletions(-)
+ 9 files changed, 302 insertions(+), 5 deletions(-)
  create mode 100644 board/xilinx/common/enclustra.c
  create mode 100644 board/xilinx/zynq/board_mux.c
+ create mode 100644 drivers/spi/zynq_qspi.c.rej
 
 diff --git a/board/xilinx/Kconfig b/board/xilinx/Kconfig
-index 4f0776e8bd..b18f885f12 100644
+index 843198fa0d..93e3ed0ecb 100644
 --- a/board/xilinx/Kconfig
 +++ b/board/xilinx/Kconfig
 @@ -41,7 +41,7 @@ config XILINX_PS_INIT_FILE
@@ -37,7 +39,7 @@ index 4f0776e8bd..b18f885f12 100644
  	default 0x1000 if ARCH_VERSAL || ARCH_VERSAL_NET
  	default 0x8000 if MICROBLAZE
  	default 0x100000 if ARCH_ZYNQ || ARCH_ZYNQMP
-@@ -58,6 +58,21 @@ config BOOT_SCRIPT_OFFSET
+@@ -59,6 +59,21 @@ config BOOT_SCRIPT_OFFSET
  	help
  	   Specifies distro boot script offset in NAND/QSPI/NOR flash.
  
@@ -326,10 +328,10 @@ index 0000000000..d96a568944
 +	"Set non volatile memory access",
 +	"<NAND|QSPI> - Set access for the selected memory device");
 diff --git a/common/board_r.c b/common/board_r.c
-index f7fb7df54a..6f883ffc41 100644
+index a7967849dc..8527bb015b 100644
 --- a/common/board_r.c
 +++ b/common/board_r.c
-@@ -762,6 +762,12 @@ static init_fnc_t init_sequence_r[] = {
+@@ -732,6 +732,12 @@ static init_fnc_t init_sequence_r[] = {
  #ifdef CONFIG_BOARD_LATE_INIT
  	board_late_init,
  #endif
@@ -343,10 +345,10 @@ index f7fb7df54a..6f883ffc41 100644
  	INIT_FUNC_WATCHDOG_RESET
  	initr_scsi,
 diff --git a/drivers/mtd/nand/raw/zynq_nand.c b/drivers/mtd/nand/raw/zynq_nand.c
-index 14cb2ba704..7734ff7b99 100644
+index bacaf13c57..e601af9b52 100644
 --- a/drivers/mtd/nand/raw/zynq_nand.c
 +++ b/drivers/mtd/nand/raw/zynq_nand.c
-@@ -1068,6 +1068,10 @@ static int zynq_nand_check_is_16bit_bw_flash(void)
+@@ -1069,6 +1069,10 @@ static int zynq_nand_check_is_16bit_bw_flash(void)
  	return is_16bit_bw;
  }
  
@@ -357,7 +359,7 @@ index 14cb2ba704..7734ff7b99 100644
  static int zynq_nand_probe(struct udevice *dev)
  {
  	struct zynq_nand_info *zynq = dev_get_priv(dev);
-@@ -1094,6 +1098,9 @@ static int zynq_nand_probe(struct udevice *dev)
+@@ -1095,6 +1099,9 @@ static int zynq_nand_probe(struct udevice *dev)
  			return -ENODEV;
  		}
  	}
@@ -368,10 +370,10 @@ index 14cb2ba704..7734ff7b99 100644
  	if (!ofnode_is_enabled(of_nand)) {
  		debug("Nand node in dt disabled\n");
 diff --git a/drivers/spi/zynq_qspi.c b/drivers/spi/zynq_qspi.c
-index d73c953b07..20eb7598b0 100644
+index c387e4aaf0..3e0ef8561e 100644
 --- a/drivers/spi/zynq_qspi.c
 +++ b/drivers/spi/zynq_qspi.c
-@@ -69,7 +69,9 @@ DECLARE_GLOBAL_DATA_PTR;
+@@ -72,7 +72,9 @@ DECLARE_GLOBAL_DATA_PTR;
  #define ZYNQ_QSPI_DEFAULT_BAUD_RATE	0x2
  
  #define ZYNQ_QSPI_FIFO_DEPTH		63
@@ -382,7 +384,7 @@ index d73c953b07..20eb7598b0 100644
  
  /* zynq qspi register set */
  struct zynq_qspi_regs {
-@@ -256,6 +258,10 @@ static int zynq_qspi_child_pre_probe(struct udevice *bus)
+@@ -209,6 +211,10 @@ static int zynq_qspi_child_pre_probe(struct udevice *bus)
  	return 0;
  }
  
@@ -393,7 +395,7 @@ index d73c953b07..20eb7598b0 100644
  static int zynq_qspi_probe(struct udevice *bus)
  {
  	struct zynq_qspi_plat *plat = dev_get_plat(bus);
-@@ -264,6 +270,10 @@ static int zynq_qspi_probe(struct udevice *bus)
+@@ -217,6 +223,10 @@ static int zynq_qspi_probe(struct udevice *bus)
  	unsigned long clock;
  	int ret;
  
@@ -403,8 +405,8 @@ index d73c953b07..20eb7598b0 100644
 +
  	priv->regs = plat->regs;
  	priv->fifo_depth = ZYNQ_QSPI_FIFO_DEPTH;
- 	priv->is_dual = plat->is_dual;
-@@ -441,8 +451,8 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
+ 
+@@ -387,8 +397,8 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
  	unsigned len, offset;
  	struct zynq_qspi_regs *regs = priv->regs;
  	static const unsigned offsets[4] = {
@@ -415,19 +417,7 @@ index d73c953b07..20eb7598b0 100644
  
  	while ((fifocount < size) &&
  			(priv->bytes_to_transfer > 0)) {
-@@ -464,10 +474,7 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
- 				return;
- 			len = priv->bytes_to_transfer;
- 			zynq_qspi_write_data(priv, &data, len);
--			if (priv->is_dual && !priv->is_inst && (len % 2))
--				len++;
--			offset = (priv->rx_buf) ?
--				  offsets[3] : offsets[len - 1];
-+			offset = (priv->rx_buf) ? offsets[0] : offsets[len];
- 			writel(data, &regs->cr + (offset / 4));
- 		}
- 	}
-@@ -499,7 +506,7 @@ static int zynq_qspi_irq_poll(struct zynq_qspi_priv *priv)
+@@ -446,7 +456,7 @@ static int zynq_qspi_irq_poll(struct zynq_qspi_priv *priv)
  	do {
  		status = readl(&regs->isr);
  	} while ((status == 0) &&
@@ -436,11 +426,31 @@ index d73c953b07..20eb7598b0 100644
  
  	if (status == 0) {
  		printf("zynq_qspi_irq_poll: Timeout!\n");
+diff --git a/drivers/spi/zynq_qspi.c.rej b/drivers/spi/zynq_qspi.c.rej
+new file mode 100644
+index 0000000000..6cc166ba0b
+--- /dev/null
++++ b/drivers/spi/zynq_qspi.c.rej
+@@ -0,0 +1,14 @@
++--- drivers/spi/zynq_qspi.c
+++++ drivers/spi/zynq_qspi.c
++@@ -474,10 +484,7 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
++ 				return;
++ 			len = priv->bytes_to_transfer;
++ 			zynq_qspi_write_data(priv, &data, len);
++-			if (priv->is_dual && !priv->is_inst && (len % 2))
++-				len++;
++-			offset = (priv->rx_buf) ?
++-				  offsets[3] : offsets[len - 1];
+++			offset = (priv->rx_buf) ? offsets[0] : offsets[len];
++ 			writel(data, &regs->cr + (offset / 4));
++ 		}
++ 	}
 diff --git a/include/init.h b/include/init.h
-index d40d11f33d..c42e5fbd1b 100644
+index d57a24fd00..8525883cb1 100644
 --- a/include/init.h
 +++ b/include/init.h
-@@ -311,6 +311,8 @@ int board_early_init_f(void);
+@@ -315,6 +315,8 @@ int board_early_init_f(void);
  /* manipulate the U-Boot fdt before its relocation */
  int board_fix_fdt(void *rw_fdt_blob);
  int board_late_init(void);
@@ -450,5 +460,5 @@ index d40d11f33d..c42e5fbd1b 100644
  int board_early_init_r(void);
  
 -- 
-2.34.1
+2.37.6
 
