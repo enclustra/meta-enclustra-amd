@@ -1,3 +1,6 @@
+## TODO handle situation with  zynqmp_enclustra_andromeda_pb5.dtsi
+## TODO handle situation with  zynq_enclustra_mars_st3.dtsi
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/common:"
 
 FILESEXTRAPATHS:prepend:refdes-xu1-pe1 := "${THISDIR}/files/refdes-xu1-pe1:${SYSCONFIG_PATH}:"
