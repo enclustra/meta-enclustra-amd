@@ -12,8 +12,6 @@ FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/files/zynqmp/${ENCLUSTRA_B
 FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/files/zynq/${ENCLUSTRA_BOOTMODE}:"
 
 ## common
-## NB: 0001-ubifs patch messes up QSPI bootcmd line - thus don't take this patch
-#SRC_URI:append = " file://0001-ubifs-distroboot-support.patch"
 SRC_URI:append = " file://0008-Enclustra-MAC-address-readout-from-EEPROM.patch"
 
 ## specific
