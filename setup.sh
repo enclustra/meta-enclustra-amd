@@ -57,11 +57,14 @@ identify_machine_parent()
 
 ## MAIN
 
-test $# -ne 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE>"
+echo "Arguments passed: $@"
+test $# -ne 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE> <BOOTMODE>"
 RESOURCEDIR_XSA="$( readlink -f ${1} )" || die "path to .xsa not found!"
 PETALINUX_PROJECT_NAME="${2}"
 MACHINE="${3}"
 BOOTMODE="${4}"
+MODULE=$(echo "${MACHINE}" | awk -F'-' '{print $2}')
+BASEBOARD=$(echo "${MACHINE}" | awk -F'-' '{print $3}')
 
 ## data
 PETALINUXDIR="$( readlink -f $( dirname ${0} ) )"
@@ -132,7 +135,7 @@ done
 ## fix: provide MACHINE for petalinux setup (has to be in .conf file
 ## and not in a .bb such as e.g. the image.bb)
 cd "${PETALINUXDIR}"
-MACHINEOVERRIDE="enclustra-${BOOTMODE}"
+MACHINEOVERRIDE="enclustra-${BOOTMODE}:${MODULE}-module:${BASEBOARD}-generic"
 echo "MACHINEOVERRIDES =. \"${MACHINEOVERRIDE}:\""                  > ./build/conf/enclustra.inc
 echo "EXTRA_USERS_SUDOERS=\"petalinux ALL=(ALL) NOPASSWD: ALL;\""  >> ./build/conf/enclustra.inc
 
