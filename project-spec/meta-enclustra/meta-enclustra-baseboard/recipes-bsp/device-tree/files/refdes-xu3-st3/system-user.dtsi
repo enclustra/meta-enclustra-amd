@@ -3,5 +3,5 @@
 	model = "Enclustra XU3 SOM";
 };
 #include "zynqmp_enclustra_common.dtsi"
-#include "zynqmp_enclustra_mercury_st3.dtsi"
-#include "zynqmp_enclustra_mercury_xu3.dtsi"
+#include "zynqmp_enclustra_mars_st3.dtsi"
+#include "zynqmp_enclustra_mars_xu3.dtsi"
