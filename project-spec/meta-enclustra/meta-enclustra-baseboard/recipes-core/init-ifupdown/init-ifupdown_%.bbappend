@@ -2,7 +2,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 ENCLUSTRA_ETH_INTERFACES := "dual"
-#ENCLUSTRA_ETH_INTERFACES:eb1-baseboard := "single"
 
 SRC_URI += " \
         file://interfaces_${ENCLUSTRA_ETH_INTERFACES}_eth \
