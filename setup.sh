@@ -57,14 +57,11 @@ identify_machine_parent()
 
 ## MAIN
 
-echo "Arguments passed: $@"
-test $# -ne 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE> <BOOTMODE>"
+test $# -ne 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE>"
 RESOURCEDIR_XSA="$( readlink -f ${1} )" || die "path to .xsa not found!"
 PETALINUX_PROJECT_NAME="${2}"
 MACHINE="${3}"
 BOOTMODE="${4}"
-MODULE=$(echo "${MACHINE}" | awk -F'-' '{print $2}')
-BASEBOARD=$(echo "${MACHINE}" | awk -F'-' '{print $3}')
 
 ## data
 PETALINUXDIR="$( readlink -f $( dirname ${0} ) )"
