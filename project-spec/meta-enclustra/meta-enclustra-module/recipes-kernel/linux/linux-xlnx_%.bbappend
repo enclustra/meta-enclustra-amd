@@ -5,7 +5,7 @@ FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/${PN}/zynq:"
 
 ENCLUSTRA_BOOTMODE := "sd"
 ENCLUSTRA_BOOTMODE:enclustra-qspi := "qspi"
-#ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
+ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
 #...
 
 FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/${PN}/zynqmp/${ENCLUSTRA_BOOTMODE}:"
