@@ -115,7 +115,7 @@ if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/rootfs-${BOOTMODE}.cfg" ]; then
 	IFS=$'\n'
 	while read line; do
 		CONFIG_ROOTFS=( ${CONFIG_ROOTFS[*]} "$line" )
-	done < ./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}.cfg ## NEVER use quotes here!
+	done < ./enclustra/${MACHINE_PARENT_TYPE}/rootfs-${BOOTMODE}.cfg ## NEVER use quotes here!
 	IFS="$OLDIFS"
 fi
 
