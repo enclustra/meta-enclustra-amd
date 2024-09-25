@@ -45,6 +45,8 @@ FILESEXTRAPATHS:prepend:refdes-zx5-pe1 := "${THISDIR}/files/refdes-zx5-pe1:${SYS
 FILESEXTRAPATHS:prepend:refdes-zx5-pe3 := "${THISDIR}/files/refdes-zx5-pe3:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-zx5-st1 := "${THISDIR}/files/refdes-zx5-st1:${SYSCONFIG_PATH}:"
 
+FILESEXTRAPATHS:prepend:refdes-xzu65-st1 := "${THISDIR}/files/refdes-xzu65-st1:${SYSCONFIG_PATH}:"
+
 ENCLUSTRA_SELECT_ARCH := "zynq"
 ENCLUSTRA_SELECT_ARCH:zynqmp-generic := "zynqmp"
 
@@ -100,5 +102,7 @@ YAML_DT_BOARD_FLAGS:refdes-zx3-st3 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-zx5-pe1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-zx5-pe3 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-zx5-st1 = "{BOARD template}"
+
+YAML_DT_BOARD_FLAGS:refdes-xzu65-st1 = "{BOARD template}"
 
 PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
