@@ -72,22 +72,15 @@ PETALINUXDIR="$( readlink -f $( dirname ${0} ) )"
 cd "${PETALINUXDIR}"
 petalinux-config --get-hw-description="${RESOURCEDIR_XSA}" --silentconfig
 
-### TODO rm - personal setting for development, rm for productive usage        
-#RESOURCEDIR=~/"workspace/0000__petalinux"
-#if [ -e "${RESOURCEDIR}/sstate-cache" ]; then
-#	cd "${PETALINUXDIR}/build/"
-#	ln -sf "${RESOURCEDIR}/sstate-cache" .
-#fi
-#if [ -e "${RESOURCEDIR}/downloads" ]; then
-#	cd "${PETALINUXDIR}/build/"
-#	ln -sf "${RESOURCEDIR}/downloads" .
-#fi
-
 ## petalinux-config - basics, project name and yocto MACHINE...
 CONFIG_PETALINUX=(
     "CONFIG_SUBSYSTEM_HOSTNAME=\"${PETALINUX_PROJECT_NAME}\""
     "CONFIG_SUBSYSTEM_PRODUCT=\"${PETALINUX_PROJECT_NAME}\""
+	# Changes derived MACHINE name
     "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
+	# Adds MACHINE name to overrides
+    "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
+	"CONFIG_YOCTO_ADD_OVERRIDES=\"enclustra-${BOOTMODE}\""
     'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
     'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
 )
@@ -132,35 +125,8 @@ for ((idx = 0; idx < ${#CONFIG_ROOTFS[@]}; idx++)); do
 	apply_cfg_fragment "${CONFIG_ROOTFS[$idx]}" "./project-spec/configs/rootfs_config"
 done
 
-## fix: provide MACHINE for petalinux setup (has to be in .conf file
-## and not in a .bb such as e.g. the image.bb)
-cd "${PETALINUXDIR}"
-MACHINEOVERRIDE="enclustra-${BOOTMODE}:${MODULE}-module:${BASEBOARD}-generic"
-echo "MACHINEOVERRIDES =. \"${MACHINEOVERRIDE}:\""                  > ./build/conf/enclustra.inc
-echo "EXTRA_USERS_SUDOERS=\"petalinux ALL=(ALL) NOPASSWD: ALL;\""  >> ./build/conf/enclustra.inc
-
-## fix: remove nfs packages (default in 23.1)
-#echo 'DISTRO_FEATURES:remove = "nfs"' >> ./build/conf/enclustra.inc
-#echo 'DISTRO_FEATURES_DEFAULT:remove = "nfs"' >> ./build/conf/enclustra.inc
-#echo 'IMAGE_INSTALL:remove = "nfs-utils nfs-client"' >> ./build/conf/enclustra.inc
-#echo 'IMAGE_INSTALL:pn-petalinux-image-minimal:remove = "nfs-utils nfs-client"' >> ./build/conf/enclustra.inc
-
-if [ -z "$(grep "require conf/enclustra.inc" -r ./build/conf/local.conf)" ]; then
-	echo "require conf/enclustra.inc" >> ./build/conf/local.conf
-fi
-
-## fix: remove petalinux warning about locked signatures,
-## this is handled by peta TCL code, thus can't be overloaded in meta layers
-cd "${PETALINUXDIR}"
-echo 'SIGGEN_UNLOCKED_RECIPES += "qemu-xilinx-system-native"' >> ./project-spec/meta-user/conf/petalinuxbsp.conf
-echo 'SIGGEN_UNLOCKED_RECIPES += "busybox"' >> ./project-spec/meta-user/conf/petalinuxbsp.conf
-
 cd "${PETALINUXDIR}"
 petalinux-config --silentconfig
-
-if [ -z "$( grep "include conf/petalinuxbsp.conf" -r ./build/conf/local.conf )" ]; then
-	echo "include conf/petalinuxbsp.conf" >> ./build/conf/local.conf
-fi
 
 rm -v ./setup.sh
 echo "READY."
