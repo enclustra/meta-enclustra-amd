@@ -80,6 +80,8 @@ CONFIG_PETALINUX=(
 	"CONFIG_YOCTO_ADD_OVERRIDES=\"enclustra-${BOOTMODE}\""
     'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
     'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
+	# Add bootarg so that Linux does not disable clocks exported from PS to PL
+	'CONFIG_SUBSYSTEM_EXTRA_BOOTARGS="clk_ignore_unused"'
 )
 
 ## identify MACHINE_PARENT_TYPE: zynq or zynqMP
