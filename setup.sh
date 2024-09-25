@@ -100,6 +100,7 @@ if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}.cfg" ]; then
 fi
 
 ## petalinux-config - apply configs
+echo "======================================= Apply petalinux project configs ========================================"
 for ((idx = 0; idx < ${#CONFIG_PETALINUX[@]}; idx++)); do
 	apply_cfg_fragment "${CONFIG_PETALINUX[$idx]}" "./project-spec/configs/config"
 done
@@ -109,6 +110,7 @@ CONFIG_ROOTFS=(
 )
 
 ## rootfs-config - read and append config fragments according to boot mode
+echo "======================================= Apply petalinux rootfs configs ========================================"
 cd "${PETALINUXDIR}"
 if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/rootfs-${BOOTMODE}.cfg" ]; then
 	OLDIFS="$IFS"
