@@ -42,7 +42,8 @@ identify_machine_parent()
 	case ${MACHINE} in
 		*-zx1-*) ;&
 		*-zx2-*) ;&
-		*-zx3-*)  MACHINE_PARENT_TYPE="zynq" ;;
+		*-zx3-*) ;&
+		*-zx5-*) MACHINE_PARENT_TYPE="zynq" ;;
 		*-xu1-*) ;&
 		*-xu3-*) ;&
 		*-xu5-*) ;&
