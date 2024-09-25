@@ -1,8 +1,3 @@
-## TODO implement st11
-## TODO implement xzu20
-## TODO implement / deal with xzu90
-## TODO implement / deal with xzu65
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SRC_URI:append:zynq-generic = " file://zynq_enclustra_common.dtsi"
@@ -16,7 +11,6 @@ SRC_URI:append:zx5-module = " file://zynq_enclustra_mercury_zx5.dtsi"
 SRC_URI:append:xu3-module = " file://zynqmp_enclustra_mars_xu3.dtsi"
 SRC_URI:append:xu1-module = " file://zynqmp_enclustra_mercury_xu1.dtsi"
 SRC_URI:append:xu5-module = " file://zynqmp_enclustra_mercury_xu5.dtsi"
-SRC_URI:append:xu5er-module = " file://zynqmp_enclustra_mercury_xu5_er.dtsi"
 SRC_URI:append:xu6-module = " file://zynqmp_enclustra_mercury_xu6.dtsi"
 SRC_URI:append:xu61-module = " file://zynqmp_enclustra_mercury_xu61.dtsi"
 SRC_URI:append:xu7-module = " file://zynqmp_enclustra_mercury_xu7.dtsi"
@@ -24,10 +18,6 @@ SRC_URI:append:xu8-module = " file://zynqmp_enclustra_mercury_xu8.dtsi"
 SRC_URI:append:xu9-module = " file://zynqmp_enclustra_mercury_xu9.dtsi"
 
 SRC_URI:append:xzu65-module = " file://zynqmp_enclustra_andromeda_xzu65.dtsi"
-#SRC_URI:append:xzu90-module = " file://zynqmp_enclustra_andromeda_xzu90.dtsi"
-
-SRC_URI:append:st11-module = " file://zynqmp_enclustra_pluto_st11.dtsi"
-SRC_URI:append:xzu20-module = " file://zynqmp_enclustra_pluto_xzu20.dtsi"
 
 ## NOTE: find the following appended in meta-user
 #SRC_URI:append = " file://config"
