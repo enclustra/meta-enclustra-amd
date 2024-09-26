@@ -17,9 +17,9 @@ FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6-pe1:${SYS
 FILESEXTRAPATHS:prepend:refdes-xu6-pe3 := "${THISDIR}/files/refdes-xu6-pe3:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6-st1:${SYSCONFIG_PATH}:"
 
-FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu61-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu6-pe3 := "${THISDIR}/files/refdes-xu61-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu61-st1:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xu61-pe1 := "${THISDIR}/files/refdes-xu61-pe1:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xu61-pe3 := "${THISDIR}/files/refdes-xu61-pe3:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xu61-st1 := "${THISDIR}/files/refdes-xu61-st1:${SYSCONFIG_PATH}:"
 
 FILESEXTRAPATHS:prepend:refdes-xu7-pe1 := "${THISDIR}/files/refdes-xu7-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu7-pe3 := "${THISDIR}/files/refdes-xu7-pe3:${SYSCONFIG_PATH}:"
