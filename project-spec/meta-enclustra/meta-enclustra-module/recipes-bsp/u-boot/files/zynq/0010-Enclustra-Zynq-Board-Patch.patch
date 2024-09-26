@@ -1,15 +1,9 @@
-From 193e16d08946768d5f73f49145e4496d6a8d54d7 Mon Sep 17 00:00:00 2001
-From: Lothar Rubusch <lothar.rubusch@enclustra.com>
-Date: Fri, 13 Sep 2024 14:59:16 +0000
-Subject: [PATCH] Zynq Board Patch
-
-Adjusted and re-patched, taken from:
-
-From 40229235053198bebbc04d90b3ebfa7b5b96879a Mon Sep 17 00:00:00 2001
-From: Enclustra <support@enclustra.com>
-Date: Thu, 22 Sep 2022 09:16:15 +0200
+From a5a63ca74890fb92252fb9e5ffe2607c43cf4a6f Mon Sep 17 00:00:00 2001
+From: Ivan Vera <ivan.vera@enclustra.com>
+Date: Tue, 24 Sep 2024 11:02:16 +0200
 Subject: [PATCH] zynq_board
 
+Adjusted and re-patched, taken from:
 Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
 ---
  board/xilinx/Kconfig             |  17 +++-
@@ -19,12 +13,10 @@ Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
  common/board_r.c                 |   6 ++
  drivers/mtd/nand/raw/zynq_nand.c |   7 ++
  drivers/spi/zynq_qspi.c          |  18 +++-
- drivers/spi/zynq_qspi.c.rej      |  14 +++
  include/init.h                   |   2 +
- 9 files changed, 302 insertions(+), 5 deletions(-)
+ 8 files changed, 288 insertions(+), 5 deletions(-)
  create mode 100644 board/xilinx/common/enclustra.c
  create mode 100644 board/xilinx/zynq/board_mux.c
- create mode 100644 drivers/spi/zynq_qspi.c.rej
 
 diff --git a/board/xilinx/Kconfig b/board/xilinx/Kconfig
 index 843198fa0d..93e3ed0ecb 100644
@@ -426,26 +418,6 @@ index c387e4aaf0..3e0ef8561e 100644
  
  	if (status == 0) {
  		printf("zynq_qspi_irq_poll: Timeout!\n");
-diff --git a/drivers/spi/zynq_qspi.c.rej b/drivers/spi/zynq_qspi.c.rej
-new file mode 100644
-index 0000000000..6cc166ba0b
---- /dev/null
-+++ b/drivers/spi/zynq_qspi.c.rej
-@@ -0,0 +1,14 @@
-+--- drivers/spi/zynq_qspi.c
-++++ drivers/spi/zynq_qspi.c
-+@@ -474,10 +484,7 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
-+ 				return;
-+ 			len = priv->bytes_to_transfer;
-+ 			zynq_qspi_write_data(priv, &data, len);
-+-			if (priv->is_dual && !priv->is_inst && (len % 2))
-+-				len++;
-+-			offset = (priv->rx_buf) ?
-+-				  offsets[3] : offsets[len - 1];
-++			offset = (priv->rx_buf) ? offsets[0] : offsets[len];
-+ 			writel(data, &regs->cr + (offset / 4));
-+ 		}
-+ 	}
 diff --git a/include/init.h b/include/init.h
 index d57a24fd00..8525883cb1 100644
 --- a/include/init.h
@@ -460,5 +432,5 @@ index d57a24fd00..8525883cb1 100644
  int board_early_init_r(void);
  
 -- 
-2.37.6
+2.45.2
 
