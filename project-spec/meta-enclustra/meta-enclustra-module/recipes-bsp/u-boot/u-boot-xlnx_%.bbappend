@@ -25,4 +25,7 @@ SRC_URI:append = " file://0020-Enclustra-ds28-eeprom-fix.patch"
 SRC_URI:append = " file://0030-zynq-qspi.patch"
 SRC_URI:append = " file://0040-emmc.patch"
 
+SRC_URI:append:zx1-module = " file://u-boot-nand.cfg"
+SRC_URI:append:zx3-module = " file://u-boot-nand.cfg"
+SRC_URI:append:zx5-module = " file://u-boot-nand.cfg"
 SRC_URI:append = " file://u-boot.cfg"
