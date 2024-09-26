@@ -113,12 +113,12 @@ CONFIG_ROOTFS=(
 ## rootfs-config - read and append config fragments according to boot mode
 echo "======================================= Apply petalinux rootfs configs ========================================"
 cd "${PETALINUXDIR}"
-if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/rootfs.cfg" ]; then
+if [ -e "./enclustra/common/rootfs-${BOOTMODE}.cfg" ]; then
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	while read line; do
 		CONFIG_ROOTFS=( ${CONFIG_ROOTFS[*]} "$line" )
-	done < ./enclustra/${MACHINE_PARENT_TYPE}/rootfs.cfg ## NEVER use quotes here!
+	done < ./enclustra/common/rootfs-${BOOTMODE}.cfg ## NEVER use quotes here!
 	IFS="$OLDIFS"
 fi
 
