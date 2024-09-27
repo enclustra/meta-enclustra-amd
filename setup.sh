@@ -138,6 +138,18 @@ for ((idx = 0; idx < ${#CONFIG_ROOTFS[@]}; idx++)); do
 	apply_cfg_fragment "${CONFIG_ROOTFS[$idx]}" "./project-spec/configs/rootfs_config"
 done
 
+## some rootfs packages need to be added to the user-rootfsconfig before they can be activated
+declare -a PACKAGES=(
+	"CONFIG_iperf3"
+	"CONFIG_memtester"
+	"CONFIG_phytool"
+)
+
+for PACKAGE in "${PACKAGES[@]}"
+do
+	echo "${PACKAGE}" >> "./project-spec/meta-user/conf/user-rootfsconfig"
+done
+
 cd "${PETALINUXDIR}"
 petalinux-config --silentconfig
 
