@@ -58,11 +58,17 @@ identify_machine_parent()
 
 ## MAIN
 
-test $# -ne 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE>"
+test $# -lt 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE> (optional)<VERSION>"
 RESOURCEDIR_XSA="$( readlink -f ${1} )" || die "path to .xsa not found!"
 PETALINUX_PROJECT_NAME="${2}"
 MACHINE="${3}"
 BOOTMODE="${4}"
+VERSION="${5}"
+
+## VERSION is optional for now so set the default value if not set when calling this script
+if [[ -z "${VERSION}" ]]; then
+	VERSION="1.00"
+fi
 
 ## data
 PETALINUXDIR="$( readlink -f $( dirname ${0} ) )"
@@ -79,6 +85,7 @@ CONFIG_PETALINUX=(
 	# Adds MACHINE name to overrides
     "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
 	"CONFIG_YOCTO_ADD_OVERRIDES=\"enclustra-${BOOTMODE}\""
+	"CONFIG_SUBSYSTEM_FW_VERSION=\"${VERSION}\""
     'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
     'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
 	# Add bootarg so that Linux does not disable clocks exported from PS to PL
