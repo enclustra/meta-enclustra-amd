@@ -64,6 +64,8 @@ PETALINUX_PROJECT_NAME="${2}"
 MACHINE="${3}"
 BOOTMODE="${4}"
 VERSION="${5}"
+MODULE=$(echo "${MACHINE}" | awk -F'-' '{print $2}')
+BASEBOARD=$(echo "${MACHINE}" | awk -F'-' '{print $3}')
 
 ## VERSION is optional for now so set the default value if not set when calling this script
 if [[ -z "${VERSION}" ]]; then
@@ -80,11 +82,13 @@ petalinux-config --get-hw-description="${RESOURCEDIR_XSA}" --silentconfig
 CONFIG_PETALINUX=(
     "CONFIG_SUBSYSTEM_HOSTNAME=\"${PETALINUX_PROJECT_NAME}\""
     "CONFIG_SUBSYSTEM_PRODUCT=\"${PETALINUX_PROJECT_NAME}\""
+	## The derivation mechanism does not seem to work properly and defaults back to zynqmp-cg as the default somewhere during the process.
+	## Therefore, the workaround right now is to add everything to the MACHINEOVERRIDES via the Petalinux project configuration.
 	# Changes derived MACHINE name
-    "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
+    # "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
 	# Adds MACHINE name to overrides
-    "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
-	"CONFIG_YOCTO_ADD_OVERRIDES=\"enclustra-${BOOTMODE}\""
+    # "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
+	"CONFIG_YOCTO_ADD_OVERRIDES=\"${MACHINE}:${MODULE}-module:${BASEBOARD}-generic:enclustra-${BOOTMODE}\""
 	"CONFIG_SUBSYSTEM_FW_VERSION=\"${VERSION}\""
     'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
     'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
@@ -132,6 +136,18 @@ fi
 ## rootfs-config - apply configs
 for ((idx = 0; idx < ${#CONFIG_ROOTFS[@]}; idx++)); do
 	apply_cfg_fragment "${CONFIG_ROOTFS[$idx]}" "./project-spec/configs/rootfs_config"
+done
+
+## some rootfs packages need to be added to the user-rootfsconfig before they can be activated
+declare -a PACKAGES=(
+	"CONFIG_iperf3"
+	"CONFIG_memtester"
+	"CONFIG_phytool"
+)
+
+for PACKAGE in "${PACKAGES[@]}"
+do
+	echo "${PACKAGE}" >> "./project-spec/meta-user/conf/user-rootfsconfig"
 done
 
 cd "${PETALINUXDIR}"
