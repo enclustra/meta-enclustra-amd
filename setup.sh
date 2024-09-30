@@ -22,18 +22,32 @@ apply_cfg_fragment()
 	DO_DISABLED="$( echo ${OPT_RAW} | grep "^# " )" || true
 	if [ -n "$DO_DISABLED" ]; then
 		OPT_CONFIG="$( echo $OPT_RAW | awk '{print $2}' )"
+		OPT_PATTERN="$OPT_RAW"
 	else
 		OPT_CONFIG="$( echo $OPT_RAW | awk -F'=' '{print $1}' )"
+		## this is needed e.g. for cases like CONFIG_ADD_EXTRA_USERS="root:root;petalinux:petalinux;"
+		OPT_PATTERN="${OPT_CONFIG}="
 	fi
-	
-	## replace or append option?
-	DO_REPLACE="$( grep "$OPT_CONFIG" -r $CONFIG_FILE )" || true
-	if [ -n "$DO_REPLACE" ]; then
-		sed -i "\|${OPT_CONFIG}|s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
-		grep $OPT_CONFIG -HIrn --color $CONFIG_FILE
-	else
-		echo "$OPT_SET" >> "$CONFIG_FILE"
+
+	## ignore, if option is already set
+	if [ -z "$( grep "$OPT_RAW" -HIrn $CONFIG_FILE )" ]; then
+		## exact match of the config setting was not found, so...
+
+		if [ -n "$DO_DISABLED" -a -n "$( grep "${OPT_CONFIG}=" -HIrn $CONFIG_FILE )" ]; then
+			## ...replace, disable - NB: this is the inverse OPT_PATTERN!
+			sed -i "\|^${OPT_CONFIG}=|s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
+
+		elif [ -z "$DO_DISABLED" -a -n "$( grep "^# ${OPT_CONFIG} is not set" -HIrn $CONFIG_FILE )" ]; then
+			## ...replace, enable
+			sed -i "\|^# ${OPT_CONFIG} |s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
+		else
+			## ...definitely not around, append
+			echo "$OPT_SET" >> "$CONFIG_FILE"
+		fi
 	fi
+
+	## print option, if not found the script stops here (error)
+	grep "${OPT_RAW}" -HIrn --color $CONFIG_FILE
 }
 
 identify_machine_parent()
@@ -80,18 +94,18 @@ petalinux-config --get-hw-description="${RESOURCEDIR_XSA}" --silentconfig
 
 ## petalinux-config - basics, project name and yocto MACHINE...
 CONFIG_PETALINUX=(
-    "CONFIG_SUBSYSTEM_HOSTNAME=\"${PETALINUX_PROJECT_NAME}\""
-    "CONFIG_SUBSYSTEM_PRODUCT=\"${PETALINUX_PROJECT_NAME}\""
+	"CONFIG_SUBSYSTEM_HOSTNAME=\"${PETALINUX_PROJECT_NAME}\""
+	"CONFIG_SUBSYSTEM_PRODUCT=\"${PETALINUX_PROJECT_NAME}\""
 	## The derivation mechanism does not seem to work properly and defaults back to zynqmp-cg as the default somewhere during the process.
 	## Therefore, the workaround right now is to add everything to the MACHINEOVERRIDES via the Petalinux project configuration.
 	# Changes derived MACHINE name
-    # "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
+	# "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
 	# Adds MACHINE name to overrides
-    # "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
+	# "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
 	"CONFIG_YOCTO_ADD_OVERRIDES=\"${MACHINE}:${MODULE}-module:${BASEBOARD}-generic:enclustra-${BOOTMODE}\""
 	"CONFIG_SUBSYSTEM_FW_VERSION=\"${VERSION}\""
-    'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
-    'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
+	'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
+	'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
 	# Add bootarg so that Linux does not disable clocks exported from PS to PL
 	'CONFIG_SUBSYSTEM_EXTRA_BOOTARGS="clk_ignore_unused"'
 )
