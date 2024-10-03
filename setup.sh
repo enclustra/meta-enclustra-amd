@@ -81,6 +81,11 @@ VERSION="${5}"
 MODULE=$(echo "${MACHINE}" | awk -F'-' '{print $2}')
 BASEBOARD=$(echo "${MACHINE}" | awk -F'-' '{print $3}')
 
+## checks
+if [[ -z "$(echo "sd emmc qspi" | grep -w ${BOOTMODE} )" ]]; then
+	die "BOOTMODE '$BOOTMODE' is invalid"
+fi
+
 ## VERSION is optional for now so set the default value if not set when calling this script
 if [[ -z "${VERSION}" ]]; then
 	VERSION="1.00"
