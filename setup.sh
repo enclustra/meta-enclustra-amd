@@ -99,9 +99,9 @@ CONFIG_PETALINUX=(
 	## The derivation mechanism does not seem to work properly and defaults back to zynqmp-cg as the default somewhere during the process.
 	## Therefore, the workaround right now is to add everything to the MACHINEOVERRIDES via the Petalinux project configuration.
 	# Changes derived MACHINE name
-	# "CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
+	"CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
 	# Adds MACHINE name to overrides
-	# "CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
+	"CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
 	"CONFIG_YOCTO_ADD_OVERRIDES=\"${MACHINE}:${MODULE}-module:${BASEBOARD}-generic:enclustra-${BOOTMODE}\""
 	"CONFIG_SUBSYSTEM_FW_VERSION=\"${VERSION}\""
 	'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
