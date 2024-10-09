@@ -1,6 +1,3 @@
-## TODO handle situation with  zynqmp_enclustra_andromeda_pb5.dtsi
-## TODO handle situation with  zynq_enclustra_mars_st3.dtsi
-
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/common:"
 
 FILESEXTRAPATHS:prepend:refdes-xu1-pe1 := "${THISDIR}/files/refdes-xu1-pe1:${SYSCONFIG_PATH}:"
@@ -50,7 +47,6 @@ FILESEXTRAPATHS:prepend:refdes-xzu65-st1 := "${THISDIR}/files/refdes-xzu65-st1:$
 ENCLUSTRA_SELECT_ARCH := "zynq"
 ENCLUSTRA_SELECT_ARCH:zynqmp-generic := "zynqmp"
 
-## TODO better remove in case " file://system-user.dtsi" before, due to wrong template setup    
 SRC_URI:append = " file://system-user.dtsi"
 
 ## enclustra st1 dtsi

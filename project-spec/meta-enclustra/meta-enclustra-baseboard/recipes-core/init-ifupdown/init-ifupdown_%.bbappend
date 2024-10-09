@@ -1,4 +1,5 @@
-## TODO: note - this is probably not used by default when systemd is active -> use mp1 layer approach
+## note: this is probably not used by default when systemd is active
+## prefer mp1 layer approach
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 ENCLUSTRA_ETH_INTERFACES := "dual"
