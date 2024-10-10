@@ -6,7 +6,7 @@
 die()
 {
 	echo "ABORTED! $@"
-	exit 0
+	exit 1
 }
 
 apply_cfg_fragment()
