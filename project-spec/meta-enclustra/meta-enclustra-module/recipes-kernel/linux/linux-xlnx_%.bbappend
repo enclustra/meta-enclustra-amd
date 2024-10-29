@@ -12,6 +12,7 @@ FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/${PN}/zynqmp/${ENCLUSTRA_B
 FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/${PN}/zynq/${ENCLUSTRA_BOOTMODE}:"
 
 SRC_URI:append = " file://0010-RTL8211F.patch"
+SRC_URI:append = " file://0001-RTC.patch"
 
 ## patches
 # TODO check for particular QSPI patches (opt)
