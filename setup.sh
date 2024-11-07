@@ -108,7 +108,7 @@ CONFIG_PETALINUX=(
 	"CONFIG_YOCTO_MACHINE_NAME=\"${MACHINE}\""
 	# Adds MACHINE name to overrides
 	"CONFIG_YOCTO_INCLUDE_MACHINE_NAME=\"${MACHINE}\""
-	"CONFIG_YOCTO_ADD_OVERRIDES=\"${MACHINE}:${MODULE}-module:${BASEBOARD}-generic:enclustra-${BOOTMODE}\""
+	"CONFIG_YOCTO_ADD_OVERRIDES=\"enclustra-${BOOTMODE}\""
 	"CONFIG_SUBSYSTEM_FW_VERSION=\"${VERSION}\""
 	'CONFIG_USER_LAYER_0="${PROOT}/project-spec/meta-enclustra/meta-enclustra-baseboard"'
 	'CONFIG_USER_LAYER_1="${PROOT}/project-spec/meta-enclustra/meta-enclustra-module"'
