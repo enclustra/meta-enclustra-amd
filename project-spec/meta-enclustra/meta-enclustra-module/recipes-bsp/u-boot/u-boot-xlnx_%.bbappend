@@ -17,6 +17,7 @@ SRC_URI:append = " file://0008-Enclustra-MAC-address-readout-from-EEPROM.patch"
 ## specific
 SRC_URI:append:zynqmp-generic = " file://0010-Enclustra-Zynqmp-Board-Patch.patch"
 SRC_URI:append:zynq-generic = " file://0010-Enclustra-Zynq-Board-Patch.patch"
+SRC_URI:append:zynq-generic = " file://0011-Fix-zynq_qspi_fill_tx_fifo.patch"
 
 ## common
 # TODO rm, if the atsha fixes are upstream
