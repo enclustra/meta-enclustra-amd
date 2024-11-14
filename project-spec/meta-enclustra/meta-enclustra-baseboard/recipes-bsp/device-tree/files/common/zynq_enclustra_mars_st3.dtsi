@@ -15,7 +15,6 @@
 };
 
 &sdhci0 {
-        u-boot,dm-pre-reloc;
         status = "okay";
         disable-wp;
 	max-frequency = <26000000>;

@@ -70,7 +70,6 @@
 };
 
 &uart0 {
-	u-boot,dm-pre-reloc;
 	status = "okay";
 	cts-override ;
 	device_type = "serial";
