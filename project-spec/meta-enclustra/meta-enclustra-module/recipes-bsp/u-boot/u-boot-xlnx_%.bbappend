@@ -20,8 +20,7 @@ SRC_URI:append:zynq-generic = " file://0010-Enclustra-Zynq-Board-Patch.patch"
 SRC_URI:append:zynq-generic = " file://0011-Fix-zynq_qspi_fill_tx_fifo.patch"
 
 ## common
-# TODO rm, if the atsha fixes are upstream
-#SRC_URI:append:zynqmp-generic = " file://0012-Bugfix-for-atsha204a-driver.patch"
+SRC_URI:append = " file://0012-Atsha204a-wakeup-and-sleep-fix.patch"
 SRC_URI:append = " file://0020-Enclustra-ds28-eeprom-fix.patch"
 SRC_URI:append = " file://0030-zynq-qspi.patch"
 SRC_URI:append = " file://0040-emmc.patch"
