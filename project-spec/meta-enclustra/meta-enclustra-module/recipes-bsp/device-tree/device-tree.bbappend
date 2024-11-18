@@ -5,8 +5,8 @@ SRC_URI:append:zynqmp-generic = " file://zynqmp_enclustra_common.dtsi"
 
 SRC_URI:append:zx2-module = " file://zynq_enclustra_mars_zx2.dtsi"
 SRC_URI:append:zx3-module = " file://zynq_enclustra_mars_zx3.dtsi file://zynq_enclustra_nand_parts.dtsi"
-SRC_URI:append:zx1-module = " file://zynq_enclustra_mercury_zx1.dtsi"
-SRC_URI:append:zx5-module = " file://zynq_enclustra_mercury_zx5.dtsi"
+SRC_URI:append:zx1-module = " file://zynq_enclustra_mercury_zx1.dtsi file://zynq_enclustra_nand_parts.dtsi"
+SRC_URI:append:zx5-module = " file://zynq_enclustra_mercury_zx5.dtsi file://zynq_enclustra_nand_parts.dtsi"
 
 SRC_URI:append:xu3-module = " file://zynqmp_enclustra_mars_xu3.dtsi"
 SRC_URI:append:xu1-module = " file://zynqmp_enclustra_mercury_xu1.dtsi"
