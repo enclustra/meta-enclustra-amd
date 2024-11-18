@@ -35,7 +35,6 @@
 };
 
 &qspi {
-// TODO needed? disable?
 	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
