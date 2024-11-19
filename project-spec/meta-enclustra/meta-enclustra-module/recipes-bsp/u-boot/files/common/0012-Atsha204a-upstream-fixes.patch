@@ -1,8 +1,64 @@
 From 61dec6b80e436e8843aace9e496591c4be5af3b4 Mon Sep 17 00:00:00 2001
 From: Arthur Ruder <arthur.ruder@enclustra.com>
 Date: Mon, 18 Nov 2024 14:33:46 +0000
-Subject: [PATCH] Add atsha204 patches for wakeup and sleep
- functions
+Subject: [PATCH] Add atsha204 patches from upstream
+
+Upstream commit: c4841ae4059f5eb46af38f53793f772e3dac140b
+Author: Michał Barnaś <barnas@google.com>
+Date: 19/02/2024 17:32:02
+Message:
+misc: atsha204a: remove broken for loop
+
+Some previous commit changed the continue statement to return,
+making the for loop used to retry waking up the chip to always
+return after one iteration. This commit removes the loop, cleaning
+the code a little.
+
+Signed-off-by: Michał Barnaś <barnas@google.com>
+
+Upstream commit: 6e0d4a7e02fa6d82f70fa74b9be564301111c462
+Author: Michał Barnaś <barnas@google.com>
+Date: 19/02/2024 17:32:03
+Message:
+misc: atsha204a: fix sleep function
+
+Fix the sleep function to issue the sleep command instead of idle one.
+
+Signed-off-by: Michał Barnaś <barnas@google.com>
+
+Upstream commit: 2a31d71d830fa4269208c846256a5a274b0d70fb
+Author: Michał Barnaś <barnas@google.com>
+Date: 19/02/2024 17:32:04
+Message:
+misc: atsha204a: fix wakeup function
+
+The ATSHA204A chip requires SDA line to go low for at least 60us to
+wake up the chip. Previous implementation did not meet this requirement
+due to the NAK received on bus and not sending the zeroes.
+The function to ignore the NAK and send bytes regardless is not
+supported in the u-boot making it impossible to wake up the chip
+this way.
+Instead, the bus speed, if needed, is set to lowest value and the
+message is sent to the address 0x0. This way, the address of zero
+makes the SDA line go low for about 80us, meeting the required time
+to wake up the chip. The zero length packet is not sent by the i2c,
+so the one byte is sent to the transfer function, but only the address
+is sent anyway.
+After sending the zero address, the bus speed is restored to the
+previous value if it was slowed down to wake up the chip.
+
+Signed-off-by: Michał Barnaś <barnas@google.com>
+
+Upstream commit: 4fa7521f66188b3fd5909de7a84d00492c7c32b5
+Author: Tom Rini <trini@konsulko.com>
+Date: 02/05/2024 03:30:58
+Message:
+misc: Remove <common.h> and add needed includes
+
+Remove <common.h> from this driver directory and when needed
+add missing include files directly.
+
+Signed-off-by: Tom Rini <trini@konsulko.com>
 
 ---
  drivers/misc/atsha204a-i2c.c | 91 ++++++++++++++++++++++++------------
