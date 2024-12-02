@@ -20,8 +20,12 @@ SRC_URI:append = " file://u-boot.cfg"
 
 ## specific
 SRC_URI:append:zynqmp-generic = " file://0010-Enclustra-Zynqmp-Board-Patch.patch"
+SRC_URI:append:zynqmp-generic = " file://sf_default_speed_50mhz.cfg"
+SRC_URI:remove:xu61-module = " file://sf_default_speed_50mhz.cfg"
+SRC_URI:append:xu61-module = " file://sf_default_speed_40mhz.cfg"
 SRC_URI:append:zynq-generic = " file://0010-Enclustra-Zynq-Board-Patch.patch"
 SRC_URI:append:zynq-generic = " file://0011-Fix-zynq_qspi_fill_tx_fifo.patch"
+SRC_URI:append:zynq-generic = " file://sf_default_speed_50mhz.cfg"
 SRC_URI:append:zx1-module = " file://u-boot-nand.cfg"
 SRC_URI:append:zx3-module = " file://u-boot-nand.cfg"
 SRC_URI:append:zx5-module = " file://u-boot-nand.cfg"
