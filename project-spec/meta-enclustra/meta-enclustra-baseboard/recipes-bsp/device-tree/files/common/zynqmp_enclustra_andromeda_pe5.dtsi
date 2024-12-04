@@ -1,0 +1,107 @@
+#include <dt-bindings/phy/phy.h>
+
+/* TODO this is a pb5 .dtsi for the meanwhile, change to PE5 content */
+
+&i2c_mgmt {
+	i2c_mux@74 {
+		compatible = "nxp,pca9547";
+		reg = <0x74>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		i2c_mux@0 {
+			reg = <0>;
+			sysmon: lm96080@2f {
+				   status = "okay";
+				   compatible = "lm80";
+				   reg = <0x2f >;
+			};
+			irps5401@46 {
+				status = "okay";
+				compatible = "infineon,irps5401";
+				reg = <0x46>;
+			};
+			irps5401@52 {
+				status = "okay";
+				compatible = "infineon,irps5401";
+				reg = <0x52>;
+			};
+			ioexpander0: ioexpander0@20 {
+				status = "disabled";
+				compatible = "nxp,pcal6416";
+				reg = <0x20>;
+				gpio-controller;
+				#gpio-cells = <2>;
+			};
+			ioexpander1: ioexpander1@21 {
+				status = "disabled";
+				compatible = "nxp,pcal6416";
+				reg = <0x21>;
+				gpio-controller;
+				#gpio-cells = <2>;
+			};
+			at24: at24@56 {
+    			compatible = "atmel,24c32";
+    			reg = <0x56>;
+    			pagesize = <32>;
+    		};
+			fan_controller: fan_controller@4c {
+    			reg = <0x4c>;
+    		};
+		};
+		i2c_mux@2 {
+			reg = <2>;
+			si5381: si5381@68 {
+				reg = <0x68>;
+			};
+		};
+
+		i2c_mux@5 {
+			reg = <5>;
+			si5332: si5332@6a {
+				reg = <0x6a>;
+			};
+		};
+	};
+};
+
+&i2c_user {
+	i2c_mux@75 {
+		compatible = "nxp,pca9547";
+		reg = <0x75>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+	};
+};
+
+&sdhci1 {
+	status = "okay";
+	/* no-1-8-v; */	/* for 1.0 silicon */
+	wp-inverted;
+	xlnx,mio_bank = <1>;
+};
+
+&usb0 {
+	status = "okay";
+};
+
+&dwc3_0 {
+	status = "okay";
+	dr_mode = "otg";
+	snps,usb3_lpm_capable;
+	phy-names = "usb3-phy";
+	phys = <&psgtr 2 PHY_TYPE_USB3 0 2>;
+	maximum-speed = "super-speed";
+};
+
+&zynqmp_dpsub {
+	status = "okay";
+	phy-names = "dp-phy0", "dp-phy1";
+	phys = <&psgtr 1 PHY_TYPE_DP 0 3>, <&psgtr 0 PHY_TYPE_DP 1 3>;
+	dma-names = "vid0", "vid1", "vid2", "gfx0";
+	dmas = <&zynqmp_dpdma 0>, <&zynqmp_dpdma 1>, <&zynqmp_dpdma 2>, <&zynqmp_dpdma 3>;
+};
+
+&zynqmp_dpdma {
+	status = "okay";
+};
