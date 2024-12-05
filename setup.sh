@@ -64,6 +64,7 @@ identify_machine_parent()
 		*-xu6-*) ;&
 		*-xu61-*) ;&
 		*-xzu65-*) ;&
+		*-xzu90-*) ;&
 		*-xu7-*) ;&
 		*-xu8-*) ;&
 		*-xu9-*) MACHINE_PARENT_TYPE="zynqMP" ;;
@@ -73,7 +74,7 @@ identify_machine_parent()
 
 ## MAIN
 
-test $# -lt 4 && die "usage: ${0} <RESOURCEDIR_XSA=> <PETALINUX_PROJECT_NAME> <MACHINE> (optional)<VERSION>"
+test $# -lt 4 && die "usage: ${0} <RESOURCEDIR_XSA> <PETALINUX_PROJECT_NAME> <MACHINE> <BOOTMODE> (optional)<VERSION>"
 RESOURCEDIR_XSA="$( readlink -f ${1} )" || die "path to .xsa not found!"
 PETALINUX_PROJECT_NAME="${2}"
 MACHINE="${3}"
