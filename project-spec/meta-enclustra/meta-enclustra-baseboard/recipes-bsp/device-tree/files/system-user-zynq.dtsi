@@ -1,0 +1,7 @@
+/include/ "system-conf.dtsi"
+/ {
+	model = "Enclustra Zynq SOM";
+};
+#include "zynq_enclustra_common.dtsi"
+#include "zynq_enclustra_baseboard.dtsi"
+#include "zynq_enclustra_module.dtsi"
