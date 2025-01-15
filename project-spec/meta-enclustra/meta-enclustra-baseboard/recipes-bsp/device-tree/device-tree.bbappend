@@ -1,5 +1,10 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files/common:"
 
+# TODO rename the module .dtsi in WORKDIR to zynqmp_enclustra_module.dtsi or zynqmp_enclustra_module.dtsi, respectively
+# TODO rename the baseboard .dtsi in WORKDIR to zynq_enclustra_module.dtsi or zynq_enclustra_module.dtsi, respectively
+# TODO make this generation dependent on the module MACHINE and the baseboard MACHINE (basically get independent from refdes-machine, here)
+# TODO fix gen-machineconf to accept two required MACHINEs, then remove the refdes-machines from meta-enclustra-baseboard
+
 FILESEXTRAPATHS:prepend:refdes-xu1-pe1 := "${THISDIR}/files/refdes-xu1-pe1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu1-pe3 := "${THISDIR}/files/refdes-xu1-pe3:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xu1-st1 := "${THISDIR}/files/refdes-xu1-st1:${SYSCONFIG_PATH}:"
