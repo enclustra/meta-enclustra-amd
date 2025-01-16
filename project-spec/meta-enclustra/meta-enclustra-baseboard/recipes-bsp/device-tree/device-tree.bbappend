@@ -112,3 +112,10 @@ YAML_DT_BOARD_FLAGS:refdes-xzu65-st1 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-xzu90-pi5 = "{BOARD template}"
 
 PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
+
+devicetree_do_compile:prepend() {
+    os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
+    f = open('device-tree/system-top.dts', 'a')
+    f.write('#include "system-user.dtsi"')
+    f.close()
+}
