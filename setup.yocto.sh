@@ -1,4 +1,4 @@
-#!/usr/bin/sh -e
+#!/usr/bin/bash -e
 ## e.g. $0 ~/workspace/0000__yocto/binaries_AM-XZU90-19EG-2I-D12E_PE5.zip sd refdes-xzu90-pe5
 die() { echo $@ ; exit 1; }
 usage() { printf "usage:\n$0 <path to binaries.zip> <bootmode: sd|emmc|qspi> <MACHINE>\n"; die "failed"; }
@@ -29,16 +29,21 @@ append2layers()
 	fi
 }
 
+SCRIPTDIR=$( dirname $0 )
+TOPDIR=$( readlink -e $SCRIPTDIR/.. )
+cd $TOPDIR
+
 BINARIES_ZIP=$1
 BOOTMODE="$2"
 MACHINE="$3"
 MACHINE_FINAL="${MACHINE}-final"
-TOPDIR=$( pwd )
 ENCLUSTRA_LAYERS="$TOPDIR/meta-enclustra-configs/project-spec/meta-enclustra"
+
+which xsct | awk -v c=1 '/xsct/{c=0}; END{exit c}' || die "FAILED! 'xsct' not in env!"
 
 ## if not around, fetch basic layer setup
 if [ ! -d "$TOPDIR/sources" ]; then
-	dpkg -l "repo" | awk -v c=1 '/^ii/{c=0}; END{exit c}' || die "FAILED! pls install 'repo' on this machine"
+	which repo | awk -v c=1 '/repo/{c=0}; END{exit c}' || die "FAILED! 'repo' tool is not installed (https://gerrit.googlesource.com/git-repo)!"
 	repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.1"
 	repo sync
 fi
@@ -48,9 +53,9 @@ BINARIES=$(echo $BINARIES_ZIP | awk -F/ '{gsub(".(zip|ZIP)$","",$NF); print $NF}
 if [ ! -d "$TOPDIR/$BINARIES" ]; then
 	test -f "$BINARIES_ZIP" || die "path to binaries zip: '$BINARIES_ZIP' is invalid"
 	mkdir $TOPDIR/$BINARIES
-	{ pushd $TOPDIR/$BINARIES ; } &> /dev/null
+	cd $TOPDIR/$BINARIES
 	unzip $BINARIES_ZIP
-	{ popd ; } &> /dev/null
+	cd $TOPDIR
 fi
 
 ## this changes into ./build
