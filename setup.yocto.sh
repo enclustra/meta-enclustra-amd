@@ -113,5 +113,5 @@ append2localconf "IMAGE_INSTALL" "iperf3" ":append"
 append2localconf "IMAGE_INSTALL" "memtester" ":append"
 append2localconf "IMAGE_INSTALL" "phytool" ":append"
 
-printf "now build:\nbitbake petalinux-image-minimal\n"
+printf "now build:\nbitbake petalinux-image-minimal\n$ . ./sources/poky/oe-init-build-env"
 echo "READY."
