@@ -11,7 +11,7 @@ append2localconf() {
 	LOCALCONF="$TOPDIR/build/conf/local.conf"
 	
 	RES=$( bitbake-getvar ${VAR} | grep -v "^\(#\|NOTE\)" ) || true
-	if [ -z "$( echo $RES | grep $CONTENT | grep -v "^#" )" ]; then
+	if [ -z "$( echo $RES | awk '/("|\s)$CONTENT("|\s)/{print}' )" ]; then
 		if [ -n "$SUFFIX" ]; then
 			echo "$VAR$SUFFIX = \" $CONTENT\"" >> "$LOCALCONF"
 		else
