@@ -1,161 +1,120 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/files/common:"
-
-# TODO rename the module .dtsi in WORKDIR to zynqmp_enclustra_module.dtsi or zynqmp_enclustra_module.dtsi, respectively
-# TODO rename the baseboard .dtsi in WORKDIR to zynq_enclustra_module.dtsi or zynq_enclustra_module.dtsi, respectively
-# TODO make this generation dependent on the module MACHINE and the baseboard MACHINE (basically get independent from refdes-machine, here)
-# TODO fix gen-machineconf to accept two required MACHINEs, then remove the refdes-machines from meta-enclustra-baseboard
-
-FILESEXTRAPATHS:prepend:refdes-xu1-pe1 := "${THISDIR}/files/refdes-xu1-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu1-pe3 := "${THISDIR}/files/refdes-xu1-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu1-st1 := "${THISDIR}/files/refdes-xu1-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu3-st3 := "${THISDIR}/files/refdes-xu3-st3:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu5-pe1 := "${THISDIR}/files/refdes-xu5-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu5-pe3 := "${THISDIR}/files/refdes-xu5-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu5-st1 := "${THISDIR}/files/refdes-xu5-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu6-pe1 := "${THISDIR}/files/refdes-xu6-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu6-pe3 := "${THISDIR}/files/refdes-xu6-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu6-st1 := "${THISDIR}/files/refdes-xu6-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu61-pe1 := "${THISDIR}/files/refdes-xu61-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu61-pe3 := "${THISDIR}/files/refdes-xu61-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu61-st1 := "${THISDIR}/files/refdes-xu61-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu7-pe1 := "${THISDIR}/files/refdes-xu7-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu7-pe3 := "${THISDIR}/files/refdes-xu7-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu7-st1 := "${THISDIR}/files/refdes-xu7-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu8-pe1 := "${THISDIR}/files/refdes-xu8-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu8-pe3 := "${THISDIR}/files/refdes-xu8-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu8-st1 := "${THISDIR}/files/refdes-xu8-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xu9-pe1 := "${THISDIR}/files/refdes-xu9-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu9-pe3 := "${THISDIR}/files/refdes-xu9-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-xu9-st1 := "${THISDIR}/files/refdes-xu9-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-zx1-pe1 := "${THISDIR}/files/refdes-zx1-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-zx1-pe3 := "${THISDIR}/files/refdes-zx1-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-zx1-st1 := "${THISDIR}/files/refdes-zx1-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-zx2-st3 := "${THISDIR}/files/refdes-zx2-st3:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-zx3-st3 := "${THISDIR}/files/refdes-zx3-st3:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-zx5-pe1 := "${THISDIR}/files/refdes-zx5-pe1:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-zx5-pe3 := "${THISDIR}/files/refdes-zx5-pe3:${SYSCONFIG_PATH}:"
-FILESEXTRAPATHS:prepend:refdes-zx5-st1 := "${THISDIR}/files/refdes-zx5-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xzu65-st1 := "${THISDIR}/files/refdes-xzu65-st1:${SYSCONFIG_PATH}:"
-
-FILESEXTRAPATHS:prepend:refdes-xzu90-pe5 := "${THISDIR}/files/refdes-xzu90-pe5:${SYSCONFIG_PATH}:"
-
-ENCLUSTRA_SELECT_ARCH := "zynq"
-ENCLUSTRA_SELECT_ARCH:zynqmp-generic := "zynqmp"
+FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/files/zynqmp:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/files/zynq:${SYSCONFIG_PATH}:"
 
 SRC_URI:append = " file://system-user.dtsi"
-
-## enclustra st1 dtsi
-SRC_URI:append:pe1-generic = " file://${ENCLUSTRA_SELECT_ARCH}_enclustra_mercury_pe1.dtsi"
-SRC_URI:append:pe3-generic = " file://${ENCLUSTRA_SELECT_ARCH}_enclustra_mercury_pe3.dtsi"
-SRC_URI:append:pe5-generic = " file://${ENCLUSTRA_SELECT_ARCH}_enclustra_andromeda_pe5.dtsi"
-SRC_URI:append:st1-generic = " file://${ENCLUSTRA_SELECT_ARCH}_enclustra_mercury_st1.dtsi"
-SRC_URI:append:st3-generic = " file://${ENCLUSTRA_SELECT_ARCH}_enclustra_mars_st3.dtsi"
+SRC_URI:append:pe1-generic = " file://enclustra_mercury_pe1.dtsi"
+SRC_URI:append:pe3-generic = " file://enclustra_mercury_pe3.dtsi"
+SRC_URI:append:pe5-generic = " file://enclustra_andromeda_pe5.dtsi"
+SRC_URI:append:st1-generic = " file://enclustra_mercury_st1.dtsi"
+SRC_URI:append:st3-generic = " file://enclustra_mars_st3.dtsi"
 
 ## fix DT flags for petalinux tool
-## NB: required with explicit override ONLY!
-YAML_DT_BOARD_FLAGS:refdes-xu1-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu1-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu1-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu3-st3 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu5-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu5-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu5-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu6-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu6-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu6-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu61-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu61-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu61-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu7-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu7-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu7-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu8-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu8-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu8-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xu9-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu9-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-xu9-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-zx1-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-zx1-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-zx1-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-zx2-st3 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-zx3-st3 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-zx5-pe1 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-zx5-pe3 = "{BOARD template}"
-YAML_DT_BOARD_FLAGS:refdes-zx5-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xzu65-st1 = "{BOARD template}"
-
-YAML_DT_BOARD_FLAGS:refdes-xzu90-pi5 = "{BOARD template}"
-
+## (required with explicit override ONLY!)
+YAML_DT_BOARD_FLAGS = "{BOARD template}"
 PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
 
 ENCLUSTRA_BOOTMODE := "sd"
 ENCLUSTRA_BOOTMODE:enclustra-qspi := "qspi"
 ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
 
-do_configure:append:zynqmp-generic() {
-	case "${@d.getVar('ENCLUSTRA_BOOTMODE','FAILED')}" in
-	"sd")
-		sed -ie '\|bootargs =|s|.*|		bootargs = "sd earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait";|' ${B}/device-tree/system-top.dts
-		;;
-	"emmc")
-## TODO verify
-		sed -ie '\|bootargs =|s|.*|		bootargs = "emmc earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait";|' ${B}/device-tree/system-top.dts
-		;;
-	"qspi")
-## TODO
-		sed -ie '\|bootargs =|s|.*|             bootargs = "qspi earlycon console=ttyPS0,115200 clk_ignore_unused rw rootwait";|' ${B}/device-tree/system-top.dts
-		;;
-	*)
-		touch "TODO_FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT"
-		;;
-	esac
+## append SOM dtsi
+do_configure:prepend:xu1-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu1.dtsi\"" >> ../system-user.dtsi
 }
-do_configure:append:zynq-generic() {
-	case "${@d.getVar('ENCLUSTRA_BOOTMODE','FAILED')}" in
-	"sd")
-## TODO
-		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
-		;;
-	"emmc")
-## TODO
-		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
-		;;
-	"qspi")
-## TODO
-		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
-		;;
-	esac
+do_configure:prepend:xu3-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu3.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu5-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu5.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu6-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu6.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu61-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu61.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu7-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu7.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu8-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu8.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu9-module() {
+    echo "#include \"zynqmp_enclustra_mercury_xu9.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xu65-module() {
+    echo "#include \"zynqmp_enclustra_andromeda_xzu65.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xzu90-module() {
+    echo "#include \"zynqmp_enclustra_andromeda_xzu90.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:zx1-module() {
+    echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:zx2-module() {
+    echo "#include \"zynq_enclustra_mercury_zx2.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:zx3-module() {
+    echo "#include \"zynq_enclustra_mercury_zx3.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:zx5-module() {
+    echo "#include \"zynq_enclustra_mercury_zx5.dtsi\"" >> ../system-user.dtsi
 }
 
-devicetree_do_compile:prepend() {
+## baseboard
+do_configure:append:pe1-generic() {
+    echo "#include \"enclustra_mercury_pe1.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:append:pe3-generic() {
+    echo "#include \"enclustra_mercury_pe3.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:append:pe5-generic() {
+    echo "#include \"enclustra_andromeda_pe5.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:append:st1-generic() {
+    echo "#include \"enclustra_mercury_st1.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:append:st3-generic() {
+    echo "#include \"enclustra_mars_st3.dtsi\"" >> ../system-user.dtsi
+}
+
+## bootargs
+## TODO fix bootargs for zynqmp, botmode emmc
+## TODO fix bootargs for zynqmp, bootmode qspi
+devicetree_do_compile:prepend:zynqmp-generic() {
+    if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"SD earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
+    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"EMMC earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system-top.dts")
+    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"QSPI earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
+    else:
+        os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
+
     os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
 
     f = open('device-tree/system-top.dts', 'a')
+    f.write('#include "system-user.dtsi"')
+    f.close()
+}
+
+## TODO fix bootargs for zynq, bootmode sd
+## TODO fix bootargs for zynq, bootmode emmc
+## TODO fix bootargs for zynq, bootmode qspi
+## TODO verify zynq build
+devicetree_do_compile:prepend:zynq-generic() {
+    if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system.dts")
+    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system.dts")
+    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system.dts")
+    else:
+        os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
+
+    os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
+
+    f = open('device-tree/system.dts', 'a')
     f.write('#include "system-user.dtsi"')
     f.close()
 }

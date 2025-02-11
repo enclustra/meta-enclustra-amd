@@ -1,0 +1,5 @@
+/include/ "system-conf.dtsi"
+/ {
+	model = "Enclustra ZynqMP SOM";
+};
+#include "zynqmp_enclustra_common.dtsi"
