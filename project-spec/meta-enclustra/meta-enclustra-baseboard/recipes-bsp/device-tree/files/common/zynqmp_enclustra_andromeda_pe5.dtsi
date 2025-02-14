@@ -1,76 +1,98 @@
 #include <dt-bindings/phy/phy.h>
 
-/* TODO this is a pb5 .dtsi for the meanwhile, change to PE5 content */
-
 &i2c_mgmt {
-	i2c_mux@74 {
+	i2c-mux@74 {
 		compatible = "nxp,pca9547";
 		reg = <0x74>;
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		i2c_mux@0 {
+		i2c-mux@0 {
 			reg = <0>;
-			sysmon: lm96080@2f {
-				   status = "okay";
-				   compatible = "lm80";
-				   reg = <0x2f >;
-			};
-			irps5401@46 {
-				status = "okay";
-				compatible = "infineon,irps5401";
-				reg = <0x46>;
-			};
-			irps5401@52 {
-				status = "okay";
-				compatible = "infineon,irps5401";
-				reg = <0x52>;
-			};
-			ioexpander0: ioexpander0@20 {
+			ioexpander0: gpio@20 {
 				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x20>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			ioexpander1: ioexpander1@21 {
+			ioexpander1: gpio@21 {
 				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x21>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			at24: at24@56 {
-    			compatible = "atmel,24c32";
-    			reg = <0x56>;
-    			pagesize = <32>;
-    		};
-			fan_controller: fan_controller@4c {
-    			reg = <0x4c>;
-    		};
-		};
-		i2c_mux@2 {
-			reg = <2>;
-			si5381: si5381@68 {
-				reg = <0x68>;
+			fanctl: lm96063@4c {
+				status = "disabled";
+				compatible = "national,lm96163";
+				reg = <0x4c>;
+			};	
+			system_monitor: lm96080@2f {
+				status = "okay";
+				compatible = "national,lm80";
+				reg = <0x2f>;
+			};
+			irps5401@46 {
+				status = "okay";
+				compatible = "infineon,irps5401";
+				reg = <0x4e>;
+			};
+			irps5401@52 {
+				status = "okay";
+				compatible = "infineon,irps5401";
+				reg = <0x47>;
+			};
+			eeprom@56 {
+				status = "disabled";
+				compatible = "atmel,24c128";
+				reg = <0x56>;	
+			};
+			si5332: si5332@6a {
+				status = "disabled";
+				reg = <0x6a>;
 			};
 		};
-
-		i2c_mux@5 {
-			reg = <5>;
-			si5332: si5332@6a {
-				reg = <0x6a>;
+		i2c-mux@2 {
+			reg = <2>;
+			ioexpander2: gpio@20 {
+				status = "disabled";
+				compatible = "nxp,pcal6416";
+				reg = <0x20>;
+				gpio-controller;
+				#gpio-cells = <2>;
+			};
+		};
+		i2c-mux@4 {
+			reg = <4>;
+			sfp28_expander: gpio@20 {
+				status = "disabled";
+				compatible = "nxp,pcal6416";
+				reg = <0x20>;
+				gpio-controller;
+				#gpio-cells = <2>;
 			};
 		};
 	};
 };
 
 &i2c_user {
-	i2c_mux@75 {
+	i2c-mux@75 {
 		compatible = "nxp,pca9547";
 		reg = <0x75>;
 		#address-cells = <1>;
 		#size-cells = <0>;
+		i2c-mux@5 {
+			reg = <5>;
+			si5395_0: si5395-0@68 {
+				status = "disabled";
+				reg = <0x68>;
+			};
+			si5395_1: si5395-1@68 {
+				status = "disabled";
+				reg = <0x68>;
+			};
+		};
 	};
 };
 
