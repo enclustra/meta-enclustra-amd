@@ -33,12 +33,12 @@
 				compatible = "national,lm80";
 				reg = <0x2f>;
 			};
-			irps5401@46 {
+			irps5401@4e {
 				status = "okay";
 				compatible = "infineon,irps5401";
 				reg = <0x4e>;
 			};
-			irps5401@52 {
+			irps5401@47 {
 				status = "okay";
 				compatible = "infineon,irps5401";
 				reg = <0x47>;
