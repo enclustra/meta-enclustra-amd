@@ -83,11 +83,11 @@ do_configure:append:st3-generic() {
 ## TODO fix bootargs for zynqmp, bootmode qspi
 devicetree_do_compile:prepend:zynqmp-generic() {
     if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"SD earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"EMMC earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system-top.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system-top.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"QSPI earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
     else:
         os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
 
