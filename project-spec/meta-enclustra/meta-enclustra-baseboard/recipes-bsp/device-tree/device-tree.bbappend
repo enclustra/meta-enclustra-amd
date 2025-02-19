@@ -113,8 +113,48 @@ YAML_DT_BOARD_FLAGS:refdes-xzu90-pi5 = "{BOARD template}"
 
 PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
 
+ENCLUSTRA_BOOTMODE := "sd"
+ENCLUSTRA_BOOTMODE:enclustra-qspi := "qspi"
+ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
+
+do_configure:append:zynqmp-generic() {
+	case "${@d.getVar('ENCLUSTRA_BOOTMODE','FAILED')}" in
+	"sd")
+		sed -ie '\|bootargs =|s|.*|		bootargs = "sd earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait";|' ${B}/device-tree/system-top.dts
+		;;
+	"emmc")
+## TODO verify
+		sed -ie '\|bootargs =|s|.*|		bootargs = "emmc earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait";|' ${B}/device-tree/system-top.dts
+		;;
+	"qspi")
+## TODO
+		sed -ie '\|bootargs =|s|.*|             bootargs = "qspi earlycon console=ttyPS0,115200 clk_ignore_unused rw rootwait";|' ${B}/device-tree/system-top.dts
+		;;
+	*)
+		touch "TODO_FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT"
+		;;
+	esac
+}
+do_configure:append:zynq-generic() {
+	case "${@d.getVar('ENCLUSTRA_BOOTMODE','FAILED')}" in
+	"sd")
+## TODO
+		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
+		;;
+	"emmc")
+## TODO
+		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
+		;;
+	"qspi")
+## TODO
+		sed -ie '\|bootargs =|s|.*|		bootargs = "earlycon console=ttyPS0,115200 clk_ignore_unused";|' ${B}/device-tree/system-top.dts
+		;;
+	esac
+}
+
 devicetree_do_compile:prepend() {
     os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
+
     f = open('device-tree/system-top.dts', 'a')
     f.write('#include "system-user.dtsi"')
     f.close()
