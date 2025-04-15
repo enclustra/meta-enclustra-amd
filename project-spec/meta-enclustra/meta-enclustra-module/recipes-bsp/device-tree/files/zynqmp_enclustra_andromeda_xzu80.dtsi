@@ -27,14 +27,14 @@
 			txd2-skew-ps = <420>;
 			txd3-skew-ps = <420>;
 
-			// 2.58 ns  RX clock delay
-			rxc-skew-ps = <1860>;
-			rxdv-skew-ps = <0>;
+			// -0.12 ns TX clock delay
+			rxc-skew-ps = <0>;
+			rxdv-skew-ps = <900>;
 
-			rxd0-skew-ps = <0>;
-			rxd1-skew-ps = <0>;
-			rxd2-skew-ps = <0>;
-			rxd3-skew-ps = <0>;
+			rxd0-skew-ps = <900>;
+			rxd1-skew-ps = <900>;
+			rxd2-skew-ps = <900>;
+			rxd3-skew-ps = <900>;
 		};
 	};
 };
@@ -87,7 +87,7 @@
 };
 
 &psgtr {
-	clocks = <&ref100>, <&ref27>;
+	clocks = <&ref100>, <&ref135>;
 	clock-names = "ref2", "ref3";
 };
 
@@ -97,10 +97,10 @@
 		#clock-cells = <0>;
 		clock-frequency = <100000000>;
 	};
-	ref27: ref27M {
+	ref135: ref135M {
 		compatible = "fixed-clock";
 		#clock-cells = <0>;
-		clock-frequency = <27000000>;
+		clock-frequency = <135000000>;
 	};
 	i2c_mgmt: i2c@ff020000 {
 		clock-frequency = <100000>;

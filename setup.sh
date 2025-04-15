@@ -64,6 +64,8 @@ identify_machine_parent()
 		*-xu6-*) ;&
 		*-xu61-*) ;&
 		*-xzu65-*) ;&
+		*-xzu80-*) ;&
+		*-xzu90-*) ;&
 		*-xu7-*) ;&
 		*-xu8-*) ;&
 		*-xu9-*) MACHINE_PARENT_TYPE="zynqMP" ;;

@@ -43,6 +43,9 @@ FILESEXTRAPATHS:prepend:refdes-zx5-pe3 := "${THISDIR}/files/refdes-zx5-pe3:${SYS
 FILESEXTRAPATHS:prepend:refdes-zx5-st1 := "${THISDIR}/files/refdes-zx5-st1:${SYSCONFIG_PATH}:"
 
 FILESEXTRAPATHS:prepend:refdes-xzu65-st1 := "${THISDIR}/files/refdes-xzu65-st1:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xzu65-pe5 := "${THISDIR}/files/refdes-xzu65-pe5:${SYSCONFIG_PATH}:"
+
+FILESEXTRAPATHS:prepend:refdes-xzu90-pe5 := "${THISDIR}/files/refdes-xzu80-pe5:${SYSCONFIG_PATH}:"
 
 FILESEXTRAPATHS:prepend:refdes-xzu90-pe5 := "${THISDIR}/files/refdes-xzu90-pe5:${SYSCONFIG_PATH}:"
 
@@ -103,7 +106,10 @@ YAML_DT_BOARD_FLAGS:refdes-zx5-pe3 = "{BOARD template}"
 YAML_DT_BOARD_FLAGS:refdes-zx5-st1 = "{BOARD template}"
 
 YAML_DT_BOARD_FLAGS:refdes-xzu65-st1 = "{BOARD template}"
+YAML_DT_BOARD_FLAGS:refdes-xzu65-pe5 = "{BOARD template}"
 
-YAML_DT_BOARD_FLAGS:refdes-xzu90-pi5 = "{BOARD template}"
+YAML_DT_BOARD_FLAGS:refdes-xzu80-pe5 = "{BOARD template}"
+
+YAML_DT_BOARD_FLAGS:refdes-xzu90-pe5 = "{BOARD template}"
 
 PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
