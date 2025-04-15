@@ -27,7 +27,7 @@
 			txd2-skew-ps = <420>;
 			txd3-skew-ps = <420>;
 
-			// -0.12 ns TX clock delay
+			// -0.18 ns TX clock delay
 			rxc-skew-ps = <0>;
 			rxdv-skew-ps = <900>;
 
