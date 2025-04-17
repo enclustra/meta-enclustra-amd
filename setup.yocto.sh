@@ -8,8 +8,14 @@ append2localconf() {
 	VAR=$1
 	CONTENT=$2
 	SUFFIX=$3
-	LOCALCONF="$TOPDIR/build/conf/local.conf"
+	LOCALCONF="${BUILDDIR}/conf/local.conf"
 	
+	# Check if the entry is already present in local.conf
+	if grep -qE "^${VAR}${SUFFIX}.*\".*${CONTENT}.*\"" "$LOCALCONF"; then
+		echo "Entry for ${VAR}${SUFFIX} with content '${CONTENT}' already exists in local.conf"
+		return
+	fi
+
 	RES=$( bitbake-getvar ${VAR} | grep -v "^\(#\|NOTE\)" ) || true
 	if [ -z "$( echo $RES | awk '/("|\s)$CONTENT("|\s)/{print}' )" ]; then
 		if [ -n "$SUFFIX" ]; then
@@ -30,21 +36,29 @@ append2layers()
 }
 
 SCRIPTDIR=$( dirname $0 )
-TOPDIR=$( readlink -e $SCRIPTDIR/.. )
+TOPDIR=$( readlink -e $SCRIPTDIR )
 cd $TOPDIR
 
 BINARIES_ZIP=$1
 BOOTMODE="$2"
 MACHINE="$3"
-MACHINE_FINAL="${MACHINE}-final"
-ENCLUSTRA_LAYERS="$TOPDIR/meta-enclustra-configs/project-spec/meta-enclustra"
+PRODUCTMODEL=$(basename "$1" .zip | awk -F'_' '{print $2}')
+BASEBOARD=$(basename "$1" .zip | awk -F'_' '{print $3}')
+BUILDDIR="${TOPDIR}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}"
 
-which xsct | awk -v c=1 '/xsct/{c=0}; END{exit c}' || die "FAILED! 'xsct' not in env!"
+echo "TOPDIR: $TOPDIR"
+echo "BUILDDIR: $BUILDDIR"
+echo "BINARIES_ZIP: $BINARIES_ZIP"
+echo "BOOTMODE: $BOOTMODE"
+echo "MACHINE: $MACHINE"
+echo "PRODUCTMODEL: $PRODUCTMODEL"
+echo "BASEBOARD: $BASEBOARD"
+
 
 ## if not around, fetch basic layer setup
-if [ ! -d "$TOPDIR/sources" ]; then
+if [ ! -d "${TOPDIR}/sources" ]; then
 	which repo | awk -v c=1 '/repo/{c=0}; END{exit c}' || die "FAILED! 'repo' tool is not installed (https://gerrit.googlesource.com/git-repo)!"
-	repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.1"
+	repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.2"
 	repo sync
 fi
 
@@ -59,25 +73,32 @@ if [ ! -d "$TOPDIR/$BINARIES" ]; then
 fi
 
 ## this changes into ./build
-. ./setupsdk ""
+. ./setupsdk "${BUILDDIR}"
 
-## is setup XSA capable?
-test -f $ENCLUSTRA_LAYERS/meta-enclustra-baseboard/recipes-bsp/hdf/external-hdf.bbappend || die "FAILED! no external-hdf recipe (XSA)"
-test -f $ENCLUSTRA_LAYERS/meta-enclustra-baseboard/recipes-bsp/platform-init/platform-init.bbappend || die "FAILED! no platform init (XSA)"
-
-## add enclustra meta-layers
-append2layers "$TOPDIR/meta-enclustra-configs/project-spec/meta-enclustra/meta-enclustra-module"
-append2layers "$TOPDIR/meta-enclustra-configs/project-spec/meta-enclustra/meta-enclustra-baseboard"
+# add enclustra meta-layers
+append2layers "$TOPDIR/meta-enclustra-module"
+append2layers "$TOPDIR/meta-enclustra-baseboard"
 
 ## run gen-machineconf
-$TOPDIR/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf \
-	--hw-description $TOPDIR/$BINARIES/*.xsa \
-	--xsct-tool "$TOPDIR/sources/meta-xilinx-tools/recipes-utils/xsct" \
-	--require-machine "$MACHINE" \
-	--add-rootfsconfig "$TOPDIR/meta-enclustra-configs/enclustra/common/rootfs.cfg" \
-	--add-config "$TOPDIR/meta-enclustra-configs/enclustra/zynqMP/petalinux-sd.cfg" \
-	--machine-overrides "\":enclustra-${BOOTMODE}\"" \
-	--machine-name "$MACHINE_FINAL"
+# * --machine-overrides does not work for some reason, use -O instead
+# * setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
+# this in turn allows the correct require machine conf to be deducted in the meta-enclustra-module layer
+${TOPDIR}/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf parse-xsa \
+	--hw-description ${TOPDIR}/${BINARIES}/*.xsa \
+	--require-machine "${MACHINE}" \
+	-O "enclustra-${BOOTMODE}" \
+	--add-config "ADD_EXTRA_USERS=\"root:root;petalinux:petalinux;\"" \
+	--machine-name "${MACHINE}"\
+	--debug
+
+# Get the name of the generated machine from the machine conf file name
+CONF_FILE=$(find "${BUILDDIR}/conf/machine/" -name "${MACHINE}*.conf" | head -n 1)
+if [ -n "$CONF_FILE" ]; then
+	MACHINE_FINAL=$(basename "${CONF_FILE}" .conf)
+else
+	echo "MACHINE_FINAL not found in ${BUILDDIR}/conf/machine/."
+	die
+fi
 
 ## adjust generated machine
 append2localconf "MACHINE" "$MACHINE_FINAL"
@@ -104,14 +125,12 @@ append2localconf "IMAGE_INSTALL" "linux-xlnx-udev-rules" ":append"
 append2localconf "IMAGE_INSTALL" "packagegroup-core-boot" ":append"
 append2localconf "IMAGE_INSTALL" "tcf-agent" ":append"
 append2localconf "IMAGE_INSTALL" "bridge-utils" ":append"
-append2localconf "IMAGE_INSTALL" "hellopm" ":append"
 append2localconf "IMAGE_INSTALL" "dosfstools" ":append"
 append2localconf "IMAGE_INSTALL" "resize-part" ":append"
 append2localconf "IMAGE_INSTALL" "u-boot-tools" ":append"
-append2localconf "IMAGE_INSTALL" "packagegroup-petalinux-display-debug"  ":append"
 append2localconf "IMAGE_INSTALL" "iperf3" ":append"
 append2localconf "IMAGE_INSTALL" "memtester" ":append"
 append2localconf "IMAGE_INSTALL" "phytool" ":append"
 
-printf "now build:\n$ . ./sources/poky/oe-init-build-env\n$ bitbake petalinux-image-minimal\n"
+printf "now build:\n$ . ./sources/poky/oe-init-build-env ${BUILDDIR}\n$ bitbake petalinux-image-minimal\n"
 echo "READY."
