@@ -3,3 +3,11 @@
 *#
 *.orig
 *.swp
+setupsdk
+sources/
+binaries_*
+*.repo
+refdes-*/
+ME-*/
+MA-*/
+AM-*/
