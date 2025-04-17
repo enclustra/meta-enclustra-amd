@@ -79,15 +79,13 @@ do_configure:append:st3-generic() {
 }
 
 ## bootargs
-## TODO fix bootargs for zynqmp, botmode emmc
-## TODO fix bootargs for zynqmp, bootmode qspi
 devicetree_do_compile:prepend:zynqmp-generic() {
     if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
         os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system-top.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system-top.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw\";|' device-tree/system-top.dts")
     else:
         os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
 
@@ -98,17 +96,12 @@ devicetree_do_compile:prepend:zynqmp-generic() {
     f.close()
 }
 
-## TODO fix bootargs for zynq, bootmode sd
-## TODO fix bootargs for zynq, bootmode emmc
-## TODO fix bootargs for zynq, bootmode qspi
 ## TODO verify zynq build
 devicetree_do_compile:prepend:zynq-generic() {
     if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system.dts")
-    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk2p2 rw rootwait\";|' device-tree/system.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw rootwait\";|' device-tree/system.dts")
     else:
         os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
 

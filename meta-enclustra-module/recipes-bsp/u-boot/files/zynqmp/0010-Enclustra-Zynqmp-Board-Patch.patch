@@ -1,66 +1,51 @@
+From a804f97f49a013fca328ed4d7906a7d97b4707e7 Mon Sep 17 00:00:00 2001
+From: Arthur Ruder <arthur.ruder@enclustra.com>
+Date: Thu, 10 Apr 2025 16:04:16 +0200
+Subject: [PATCH] [PATCH] Enclustra Zynqmp Board Patch
+
+Removed ENCLUSTRA_NANDMUX from Kconfig since it does not apply to zynqmp modules.
+
+re-issued patch from:
+
 From 5f5b49e070f25225d028836787b86417c545df7e Mon Sep 17 00:00:00 2001
 From: Lothar Rubusch <lothar.rubusch@enclustra.com>
 Date: Thu, 12 Sep 2024 17:10:25 +0000
 Subject: [PATCH] Enclustra Zynqmp Board Patch
 
-re-issued patch from:
-
-From 39f907750824a694f8c3d08fa766263e1263ceee Mon Sep 17 00:00:00 2001
-From: Lothar Rubusch <lothar.rubusch@enclustra.com>
-Date: Tue, 27 Sep 2022 18:53:48 +0000
-Subject: [PATCH] Enclustra Zynqmp Board Patch
-
-Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
+Signed-off-by: Arthur Ruder <arthur.ruder@enclustra.com>
 ---
- board/xilinx/Kconfig            | 17 +++++-
- board/xilinx/common/enclustra.c | 93 +++++++++++++++++++++++++++++++++
+ board/xilinx/Kconfig            | 10 ++++
+ board/xilinx/common/enclustra.c | 92 +++++++++++++++++++++++++++++++++
  board/xilinx/zynqmp/Makefile    |  1 +
  common/board_r.c                |  6 +++
  include/init.h                  |  2 +
- 5 files changed, 118 insertions(+), 1 deletion(-)
+ 5 files changed, 111 insertions(+)
  create mode 100644 board/xilinx/common/enclustra.c
 
 diff --git a/board/xilinx/Kconfig b/board/xilinx/Kconfig
-index 843198fa0d..93e3ed0ecb 100644
+index 8b17983572..0ef2b9c872 100644
 --- a/board/xilinx/Kconfig
 +++ b/board/xilinx/Kconfig
-@@ -41,7 +41,7 @@ config XILINX_PS_INIT_FILE
- endif
- 
- config XILINX_OF_BOARD_DTB_ADDR
--	hex "Default DTB pickup address"
-+	hex
- 	default 0x1000 if ARCH_VERSAL || ARCH_VERSAL_NET
- 	default 0x8000 if MICROBLAZE
- 	default 0x100000 if ARCH_ZYNQ || ARCH_ZYNQMP
-@@ -59,6 +59,21 @@ config BOOT_SCRIPT_OFFSET
- 	help
- 	   Specifies distro boot script offset in NAND/QSPI/NOR flash.
- 
+@@ -75,3 +75,13 @@ config FRU_SC
+ 	  the main CPU. SC behaves more or less as slave and have different ID.
+ 	  If you build U-Boot for SC you should enable this option to get proper
+ 	  MAC address.
++
 +config ENCLUSTRA_EEPROM_MAC
 +	bool "Enable support for reading MAC address from EEPROM"
 +	help
 +	  Enables MAC address readout from EEPROM
 +
-+config ENCLUSTRA_NANDMUX
-+	bool "QSPI NAND multiplexer"
-+	help
-+	  Enables MIO multiplexer for Enclustra ZX modules
-+
 +config ENCLUSTRA_QSPI_FLASHMAP
 +	bool "QSPI Flash Map"
 +	help
 +	  Includes device specific QSPI flash maps in the U-Boot environment
-+
- config CMD_FRU
- 	bool "FRU information for product"
- 	help
 diff --git a/board/xilinx/common/enclustra.c b/board/xilinx/common/enclustra.c
 new file mode 100644
-index 0000000000..3ab0a0dd84
+index 0000000000..b5319e8b53
 --- /dev/null
 +++ b/board/xilinx/common/enclustra.c
-@@ -0,0 +1,93 @@
+@@ -0,0 +1,92 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * (C) Copyright 2020 Enclustra GmbH
@@ -153,9 +138,9 @@ index 0000000000..3ab0a0dd84
 +	return 0;
 +#endif
 +}
-+
+\ No newline at end of file
 diff --git a/board/xilinx/zynqmp/Makefile b/board/xilinx/zynqmp/Makefile
-index 204e4fadf0..1c83f257c8 100644
+index 9ab50eca40..c75128a448 100644
 --- a/board/xilinx/zynqmp/Makefile
 +++ b/board/xilinx/zynqmp/Makefile
 @@ -4,6 +4,7 @@
@@ -197,5 +182,5 @@ index d57a24fd00..8525883cb1 100644
  int board_early_init_r(void);
  
 -- 
-2.37.6
+2.34.1
 
