@@ -123,13 +123,18 @@ identify_machine_parent
 
 ## petalinux-config - read and append config fragments according to boot mode
 ## NB: for the read-approach the .cfg file must have a final empty line/EOF, if not the last option will be omitted (fix this?)
+CONFIG_SUFFIX=""
+if [[ ${MACHINE} == *"xzu"* ]]; then
+	CONFIG_SUFFIX="-andromeda"
+fi
+
 cd "${PETALINUXDIR}"
-if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}.cfg" ]; then
+if [ -e "./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}${CONFIG_SUFFIX}.cfg" ]; then
 	OLDIFS="$IFS"
 	IFS=$'\n'
 	while read line; do
 		CONFIG_PETALINUX=( ${CONFIG_PETALINUX[*]} "$line" )
-	done < ./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}.cfg ## NEVER use quotes here!
+	done < ./enclustra/${MACHINE_PARENT_TYPE}/petalinux-${BOOTMODE}${CONFIG_SUFFIX}.cfg ## NEVER use quotes here!
 	IFS="$OLDIFS"
 fi
 
