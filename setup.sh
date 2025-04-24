@@ -41,8 +41,13 @@ apply_cfg_fragment()
 			## ...replace, enable
 			sed -i "\|^# ${OPT_CONFIG} |s|.*|${OPT_SET}|"  "$CONFIG_FILE" &> /dev/null
 		else
-			## ...definitely not around, append
-			echo "$OPT_SET" >> "$CONFIG_FILE"
+			if grep -Fq "$OPT_CONFIG" $CONFIG_FILE; then
+				## ...replace the entire line
+				sed -i "s|${OPT_CONFIG}=.*|${OPT_SET}|g" "$CONFIG_FILE"
+			else
+				## ...definitely not around, append
+				echo "$OPT_SET" >> "$CONFIG_FILE"
+			fi
 		fi
 	fi
 
