@@ -45,7 +45,7 @@ FILESEXTRAPATHS:prepend:refdes-zx5-st1 := "${THISDIR}/files/refdes-zx5-st1:${SYS
 FILESEXTRAPATHS:prepend:refdes-xzu65-st1 := "${THISDIR}/files/refdes-xzu65-st1:${SYSCONFIG_PATH}:"
 FILESEXTRAPATHS:prepend:refdes-xzu65-pe5 := "${THISDIR}/files/refdes-xzu65-pe5:${SYSCONFIG_PATH}:"
 
-FILESEXTRAPATHS:prepend:refdes-xzu90-pe5 := "${THISDIR}/files/refdes-xzu80-pe5:${SYSCONFIG_PATH}:"
+FILESEXTRAPATHS:prepend:refdes-xzu80-pe5 := "${THISDIR}/files/refdes-xzu80-pe5:${SYSCONFIG_PATH}:"
 
 FILESEXTRAPATHS:prepend:refdes-xzu90-pe5 := "${THISDIR}/files/refdes-xzu90-pe5:${SYSCONFIG_PATH}:"
 
