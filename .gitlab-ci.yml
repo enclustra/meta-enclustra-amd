@@ -1,0 +1,16 @@
+stages:
+  - Build
+
+XU6_Build:
+  stage: Build
+  image: ${CI_REGISTRY}/enclustra-utils
+  script:
+    - echo "Ran job ${CI_JOB_NAME}"
+  needs:
+    - project: Enclustra/bu-sp/mercury/mercury_xu6/mercury_xu6_reference_design/Mercury_XU6_ST1_Reference_Design
+      job: RefDesBuild_2024.2_v1.0.2
+      ref: develop
+      artifacts: true
+  artifacts:
+    reports:
+      dotenv: ${CI_JOB_NAME}.env
