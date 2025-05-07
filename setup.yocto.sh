@@ -80,14 +80,12 @@ append2layers "$TOPDIR/meta-enclustra-module"
 append2layers "$TOPDIR/meta-enclustra-baseboard"
 
 ## run gen-machineconf
-# * --machine-overrides does not work for some reason, use -O instead
-# * setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
+# setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
 # this in turn allows the correct require machine conf to be deducted in the meta-enclustra-module layer
 ${TOPDIR}/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf parse-xsa \
 	--hw-description ${TOPDIR}/${BINARIES}/*.xsa \
 	--require-machine "${MACHINE}" \
-	-O "enclustra-${BOOTMODE}" \
-	--add-config "ADD_EXTRA_USERS=\"root:root;petalinux:petalinux;\"" \
+	--machine-overrides "enclustra-${BOOTMODE}" \
 	--machine-name "${MACHINE}"\
 	--debug
 
@@ -95,6 +93,7 @@ ${TOPDIR}/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf 
 CONF_FILE=$(find "${BUILDDIR}/conf/machine/" -name "${MACHINE}*.conf" | head -n 1)
 if [ -n "$CONF_FILE" ]; then
 	MACHINE_FINAL=$(basename "${CONF_FILE}" .conf)
+	echo "MACHINE_FINAL: $MACHINE_FINAL"
 else
 	echo "MACHINE_FINAL not found in ${BUILDDIR}/conf/machine/."
 	die
