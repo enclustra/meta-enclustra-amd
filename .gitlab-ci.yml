@@ -4,6 +4,8 @@ stages:
 XU6_Build:
   stage: Build
   image: ${CI_REGISTRY}/enclustra-utils
+  tags: 
+    - docker
   script:
     - echo "Ran job ${CI_JOB_NAME}"
   needs:
