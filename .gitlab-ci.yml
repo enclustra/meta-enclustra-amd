@@ -3,6 +3,7 @@ stages:
 
 variables:
   BRANCH: "develop"
+  GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_JOB_NAME-$CI_JOB_ID
 
 .build:
   stage: Build
@@ -10,6 +11,8 @@ variables:
   tags: 
     - docker
   script:
+    - ls -la
+    - test -f binaries_${PRODUCTMODEL}_${BASEBOARD}.zip
     - env | grep CI_* > ${CI_JOB_NAME_SLUG}.env
     - echo "PROJECT_PATH=${PROJECT_PATH}" >> ${CI_JOB_NAME_SLUG}.env
     - echo "VERSION=${VERSION}" >> ${CI_JOB_NAME_SLUG}.env
