@@ -43,7 +43,7 @@ XU6_Build:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu6/mercury_xu6_reference_design/Mercury_XU6_ST1_Reference_Design"
     VERSION: "2024.2_v1.0.2"
     BASEBOARD: "ST1"
-    MACHINE: "refdes_xu6_st1"
+    MACHINE: "refdes-xu6-st1"
   parallel:
     matrix:
       - PRODUCTMODEL: ["ME-XU6-2CG-1E-D10H", "ME-XU6-4CG-1E-D12", "ME-XU6-4EV-1I-D12E", "ME-XU6-5EV-2I-D12E"]
