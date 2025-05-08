@@ -19,6 +19,9 @@ variables:
     - ./setup.yocto.sh binaries_${PRODUCTMODEL}_${BASEBOARD}.zip ${BOOTMODE} ${MACHINE}
     - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic .
     - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic.bmap .
+    - . ./sources/poky/oe-init-env ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
+    - bitbake petalinux-image-minimal --dry-run
+    - bitbake petalinux-image-minimal
   parallel:
     matrix:
       - PRODUCTMODEL: [""]
