@@ -39,7 +39,7 @@ SCRIPTDIR=$( dirname $0 )
 TOPDIR=$( readlink -e $SCRIPTDIR )
 cd $TOPDIR
 
-BINARIES_ZIP=$1
+BINARIES_ZIP=$(readlink -f "$1")
 BOOTMODE="$2"
 MACHINE="$3"
 PRODUCTMODEL=$(basename "$1" .zip | awk -F'_' '{print $2}')
