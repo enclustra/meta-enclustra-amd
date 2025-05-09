@@ -18,11 +18,11 @@ variables:
     - echo "VERSION=${VERSION}" >> ${CI_JOB_NAME_SLUG}.env
     - ./setup.yocto.sh binaries_${PRODUCTMODEL}_${BASEBOARD}.zip ${BOOTMODE} ${MACHINE}
     - . ./sources/poky/oe-init-build-env ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
-    - pwd
     - bitbake petalinux-image-minimal --dry-run
     - bitbake petalinux-image-minimal
-    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic .
-    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic.bmap .
+    - ls -la
+    - cp ./tmp/deploy/images/refdes*/*.wic ${GIT_CLONE_PATH}
+    - cp ./tmp/deploy/images/refdes*/*.wic.bmap ${GIT_CLONE_PATH}
   parallel:
     matrix:
       - PRODUCTMODEL: [""]
