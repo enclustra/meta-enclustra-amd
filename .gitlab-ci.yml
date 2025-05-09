@@ -17,12 +17,12 @@ variables:
     - echo "PROJECT_PATH=${PROJECT_PATH}" >> ${CI_JOB_NAME_SLUG}.env
     - echo "VERSION=${VERSION}" >> ${CI_JOB_NAME_SLUG}.env
     - ./setup.yocto.sh binaries_${PRODUCTMODEL}_${BASEBOARD}.zip ${BOOTMODE} ${MACHINE}
-    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic .
-    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic.bmap .
     - . ./sources/poky/oe-init-build-env ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
     - pwd
     - bitbake petalinux-image-minimal --dry-run
     - bitbake petalinux-image-minimal
+    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic .
+    - cp ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*.wic.bmap .
   parallel:
     matrix:
       - PRODUCTMODEL: [""]
