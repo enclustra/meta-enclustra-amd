@@ -20,6 +20,7 @@ SRC_URI:append = " file://0012-Atsha204a-upstream-fixes.patch"
 SRC_URI:append = " file://0020-Enclustra-ds28-eeprom-fix.patch"
 SRC_URI:append = " file://0030-zynq-qspi.patch"
 SRC_URI:append = " file://0040-emmc.patch"
+SRC_URI:append = " file://0050-update-ksz9131-driver.patch"
 SRC_URI:append = " file://u-boot.cfg"
 
 ## specific
