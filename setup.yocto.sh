@@ -78,6 +78,7 @@ fi
 # add enclustra meta-layers
 append2layers "$TOPDIR/meta-enclustra-module"
 append2layers "$TOPDIR/meta-enclustra-baseboard"
+append2layers "$TOPDIR/meta-enclustra-lab"
 
 ## run gen-machineconf
 # setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
