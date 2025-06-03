@@ -36,7 +36,7 @@ append2layers()
 }
 
 SCRIPTDIR=$( dirname $0 )
-TOPDIR=$( readlink -e $SCRIPTDIR )
+TOPDIR=$( cd $SCRIPTDIR; pwd )
 cd $TOPDIR
 
 BINARIES_ZIP="$1"
