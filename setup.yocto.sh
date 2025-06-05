@@ -36,10 +36,10 @@ append2layers()
 }
 
 SCRIPTDIR=$( dirname $0 )
-TOPDIR=$( readlink -e $SCRIPTDIR )
+TOPDIR=$( cd $SCRIPTDIR; pwd )
 cd $TOPDIR
 
-BINARIES_ZIP=$(readlink -f "$1")
+BINARIES_ZIP="$( cd $(dirname $1); pwd )/$(basename $1)"
 BOOTMODE="$2"
 MACHINE="$3"
 PRODUCTMODEL=$(basename "$1" .zip | awk -F'_' '{print $2}')
@@ -78,6 +78,7 @@ fi
 # add enclustra meta-layers
 append2layers "$TOPDIR/meta-enclustra-module"
 append2layers "$TOPDIR/meta-enclustra-baseboard"
+append2layers "$TOPDIR/meta-enclustra-lab"
 
 ## run gen-machineconf
 # setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
