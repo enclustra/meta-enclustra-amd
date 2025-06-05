@@ -22,7 +22,7 @@ do_configure:prepend:xu1-module() {
     echo "#include \"zynqmp_enclustra_mercury_xu1.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:xu3-module() {
-    echo "#include \"zynqmp_enclustra_mercury_xu3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynqmp_enclustra_mars_xu3.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:xu5-module() {
     echo "#include \"zynqmp_enclustra_mercury_xu5.dtsi\"" >> ../system-user.dtsi
@@ -52,10 +52,10 @@ do_configure:prepend:zx1-module() {
     echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx2-module() {
-    echo "#include \"zynq_enclustra_mercury_zx2.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mars_zx2.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx3-module() {
-    echo "#include \"zynq_enclustra_mercury_zx3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_mars_zx3.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx5-module() {
     echo "#include \"zynq_enclustra_mercury_zx5.dtsi\"" >> ../system-user.dtsi
