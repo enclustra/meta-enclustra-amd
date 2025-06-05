@@ -1,116 +1,15 @@
 stages:
   - Build
 
-variables:
-  BRANCH: "develop"
-  GIT_CLONE_PATH: $CI_BUILDS_DIR/$CI_JOB_NAME_SLUG-$CI_JOB_ID
-
-.build:
+nightly:
   stage: Build
-  image: ${CI_REGISTRY}/amd-yocto-enclustra:2024.2
-  tags: 
-    - docker
-  script:
-    - ls -la
-    - test -f binaries_${PRODUCTMODEL}_${BASEBOARD}.zip
-    - env | grep CI_* > ${CI_JOB_NAME_SLUG}.env
-    - echo "PROJECT_PATH=${PROJECT_PATH}" >> ${CI_JOB_NAME_SLUG}.env
-    - echo "VERSION=${VERSION}" >> ${CI_JOB_NAME_SLUG}.env
-    - echo "DL_DIR=${DL_DIR}" >> ${CI_JOB_NAME_SLUG}.env
-    - echo "SSTATE_DIR=${SSTATE_DIR}" >> ${CI_JOB_NAME_SLUG}.env
-    - ./setup.yocto.sh binaries_${PRODUCTMODEL}_${BASEBOARD}.zip ${BOOTMODE} ${MACHINE}
-    - . ./sources/poky/oe-init-build-env ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
-    - bitbake petalinux-image-minimal --dry-run
-    - bitbake petalinux-image-minimal
-    - ls -la
-    - cp ./tmp/deploy/images/refdes*/*.wic ${GIT_CLONE_PATH}
-    - cp ./tmp/deploy/images/refdes*/*.wic.bmap ${GIT_CLONE_PATH}
-  parallel:
-    matrix:
-      - PRODUCTMODEL: [""]
-        BOOTMODE: [""]
-  needs:
-    - project: $PROJECT_PATH
-      job: RefDesBuild_$VERSION
-      ref: $BRANCH
-      artifacts: true
-  artifacts:
-    when: always
-    reports:
-      dotenv: $CI_JOB_NAME_SLUG.env
-    name: build_$PRODUCTMODEL_$BASEBOARD_$BOOTMODE_$CI_JOB_ID
-    paths:
-      - ./*.wic
-      - ./*.wic.bmap
-
-XU6_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu6/mercury_xu6_reference_design/Mercury_XU6_ST1_Reference_Design"
-    VERSION: "2024.2_v1.0.2"
-    BASEBOARD: "ST1"
-    MACHINE: "refdes-xu6-st1"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["ME-XU6-2CG-1E-D10H", "ME-XU6-4CG-1E-D12", "ME-XU6-4EV-1I-D12E", "ME-XU6-5EV-2I-D12E"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
-
-Unit03_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu61/mercury_xu61_reference_design/Mercury_XU61_ST1_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
-    BASEBOARD: "ST1"
-    MACHINE: "refdes-xu61-st1"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["ME-XU61-2CG-L1I4524-D9-NU"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
-
-Unit04_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu7/mercury_xu7_reference_design/Mercury_XU7_PE3_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
-    BASEBOARD: "PE3"
-    MACHINE: "refdes-xu7-pe3"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["ME-XU7-15EG-2I-D12E"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
-
-Unit05_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu1/mercury_xu1_reference_design/Mercury_XU1_PE1_Reference_Design"
-    VERSION: "2024.2_v1.1.3"
-    BASEBOARD: "PE1"
-    MACHINE: "refdes-xu1-pe1"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["ME-XU1-15EG-2I-D12E"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
-
-Unit06_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mars/mars_xu3/mars_xu3_reference_design/Mars_XU3_ST3_Reference_Design"
-    VERSION: "2024.2_v2.0.2"
-    BASEBOARD: "ST3"
-    MACHINE: "refdes-xu3-st3"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["MA-XU3-3EG-2I-D11"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
-
-Unit08_Build:
-  extends: .build
-  variables:
-    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu8/mercury_xu8_reference_design/Mercury_XU8_PE3_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
-    BASEBOARD: "PE3"
-    MACHINE: "refdes-xu8-pe3"
-  parallel:
-    matrix:
-      - PRODUCTMODEL: ["ME-XU8-7EV-2I-D12E"]
-        BOOTMODE: ["sd", "qspi", "emmc"]
+  trigger:
+    include:
+      - local: .gitlab-ci-templates.yml
+      - local: .gitlab-ci-nightly.yml
+    strategy: depend
+  when: manual
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "nightly"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
