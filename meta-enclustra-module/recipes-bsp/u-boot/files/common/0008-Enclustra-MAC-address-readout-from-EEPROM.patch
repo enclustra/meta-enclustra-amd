@@ -1,27 +1,27 @@
+From ef9631c70d90de968a5dcebc9f816352adb6cab0 Mon Sep 17 00:00:00 2001
+From: Arthur Ruder <arthur.ruder@enclustra.com>
+Date: Wed, 18 Jun 2025 12:45:41 +0000
+Subject: [PATCH] Enclustra MAC address readout from EEPROM
+
+Re-issued patch and integrate DS28 EEPROM fix.
+
 From f76bf9528d15adf67a7eb20b25fd81dbfbeab90a Mon Sep 17 00:00:00 2001
 From: Lothar Rubusch <lothar.rubusch@enclustra.com>
 Date: Thu, 12 Sep 2024 17:06:02 +0000
 Subject: [PATCH] Enclustra MAC address readout from EEPROM
 
-Re-issued patch.
-
-From b6dd61d782f222ae867d041f500c80e2e13d3b59 Mon Sep 17 00:00:00 2001
-From: Andreas Buerkler <andreas.buerkler@enclustra.com>
-Date: Wed, 5 Jan 2022 18:15:05 +0100
-Subject: [PATCH] Enclustra MAC address readout from EEPROM
-
-Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
+Signed-off-by: Arthur Ruder <arthur.ruder@enclustra.com>
 ---
- drivers/misc/Kconfig           |  8 +++++
+ drivers/misc/Kconfig           |  8 +++
  drivers/misc/Makefile          |  1 +
- drivers/misc/eeprom-mac.c      | 60 ++++++++++++++++++++++++++++++++++
- include/enclustra/eeprom-mac.h | 11 +++++++
- 4 files changed, 80 insertions(+)
+ drivers/misc/eeprom-mac.c      | 96 ++++++++++++++++++++++++++++++++++
+ include/enclustra/eeprom-mac.h | 14 +++++
+ 4 files changed, 119 insertions(+)
  create mode 100644 drivers/misc/eeprom-mac.c
  create mode 100644 include/enclustra/eeprom-mac.h
 
 diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index 7eb38c3e94..abcd07d788 100644
+index 7eb38c3e949..abcd07d7884 100644
 --- a/drivers/misc/Kconfig
 +++ b/drivers/misc/Kconfig
 @@ -83,6 +83,14 @@ config GATEWORKS_SC
@@ -40,7 +40,7 @@ index 7eb38c3e94..abcd07d788 100644
          bool "Rockchip e-fuse support"
  	depends on MISC
 diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index 562cef624a..b37bc09627 100644
+index 562cef624ac..b37bc096271 100644
 --- a/drivers/misc/Makefile
 +++ b/drivers/misc/Makefile
 @@ -33,6 +33,7 @@ obj-$(CONFIG_ALTERA_SYSID) += altera_sysid.o
@@ -53,16 +53,36 @@ index 562cef624a..b37bc09627 100644
  obj-$(CONFIG_FSL_IIM) += fsl_iim.o
 diff --git a/drivers/misc/eeprom-mac.c b/drivers/misc/eeprom-mac.c
 new file mode 100644
-index 0000000000..d27865297d
+index 00000000000..60ba09a0be7
 --- /dev/null
 +++ b/drivers/misc/eeprom-mac.c
-@@ -0,0 +1,60 @@
+@@ -0,0 +1,96 @@
 +#include <common.h>
 +#include <linux/compat.h>
 +#include <dm.h>
 +#include <i2c.h>
 +#include <enclustra/eeprom-mac.h>
 +#include <atsha204a-i2c.h>
++
++static int i2c_get_device(uint chip_addr, int alen, struct udevice **devp)
++{
++	struct dm_i2c_chip *chip;
++	int ret;
++
++	ret = i2c_get_chip_for_busnum(DS28_SYS_I2C_EEPROM_BUS, chip_addr,
++			alen, devp);
++	if (ret)
++		return ret;
++
++	chip = dev_get_parent_plat(*devp);
++	if (chip->offset_len != alen) {
++		printf("I2C chip %x: requested alen %d does not match chip "
++			"offset_len %d\n", chip_addr, alen, chip->offset_len);
++		return -EADDRNOTAVAIL;
++	}
++
++	return 0;
++}
 +
 +static struct udevice *get_atsha204a_dev(void)
 +{
@@ -75,6 +95,22 @@ index 0000000000..d27865297d
 +
 +	return dev;
 +}
++
++int ds28_get_mac(u8 *buffer)
++{
++	int ret;
++	struct udevice *dev;
++
++	ret = i2c_get_device(DS28_I2C_ADDR, 1, &dev);
++	if (ret != 0)
++		return ret;
++
++	return dm_i2c_read(dev,
++			0x10,
++			buffer,
++			6);
++}
++EXPORT_SYMBOL_GPL(ds28_get_mac);
 +
 +int atsha204_get_mac(u8 *buffer)
 +{
@@ -119,21 +155,24 @@ index 0000000000..d27865297d
 +EXPORT_SYMBOL_GPL(atsha204_get_mac);
 diff --git a/include/enclustra/eeprom-mac.h b/include/enclustra/eeprom-mac.h
 new file mode 100644
-index 0000000000..3ec69ca3a3
+index 00000000000..2f937bd3f0f
 --- /dev/null
 +++ b/include/enclustra/eeprom-mac.h
-@@ -0,0 +1,11 @@
+@@ -0,0 +1,14 @@
 +/* SPDX-License-Identifier: GPL-2.0+ */
 +/*
 + * (C) Copyright 2021 Enclustra GmbH
 + * <info@enclustra.com>
 + */
++#define DS28_I2C_ADDR 0x5C
++#define DS28_SYS_I2C_EEPROM_BUS 0
 +
 +struct eeprom_mem {
 +    int (*mac_reader)(u8 *buffer);
 +};
 +
++int ds28_get_mac(u8 *buffer);
 +int atsha204_get_mac(u8 *buffer);
 -- 
-2.37.6
+2.34.1
 
