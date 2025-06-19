@@ -1,5 +1,6 @@
 variables:
   BRANCH: "develop"
+  VERSION: "2024.2"
   TARGET: "petalinux-image-minimal"
 
 .build:

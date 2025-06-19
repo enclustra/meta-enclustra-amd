@@ -19,7 +19,3 @@ SRC_URI:append:xu9-module = " file://zynqmp_enclustra_mercury_xu9.dtsi"
 
 SRC_URI:append:xzu65-module = " file://zynqmp_enclustra_andromeda_xzu65.dtsi"
 SRC_URI:append:xzu90-module = " file://zynqmp_enclustra_andromeda_xzu90.dtsi"
-
-## NOTE: find the following appended in meta-user
-#SRC_URI:append = " file://config"
-#SRC_URI:append = " file://system-user.dtsi"

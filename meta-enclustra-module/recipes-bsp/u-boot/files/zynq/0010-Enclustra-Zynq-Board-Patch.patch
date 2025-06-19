@@ -1,37 +1,35 @@
+From 757703f536a2a33e25b8f88ca8918967c5fdb97f Mon Sep 17 00:00:00 2001
+From: Arthur Ruder <arthur.ruder@enclustra.com>
+Date: Wed, 18 Jun 2025 12:10:06 +0000
+Subject: [PATCH] zynq_board
+
+Main adjustment is the removal of unnecessary changes to the zynq_qspi driver stemming from
+the previous patch(es).
+
+Re-patched from:
 From a5a63ca74890fb92252fb9e5ffe2607c43cf4a6f Mon Sep 17 00:00:00 2001
 From: Ivan Vera <ivan.vera@enclustra.com>
 Date: Tue, 24 Sep 2024 11:02:16 +0200
 Subject: [PATCH] zynq_board
-
-Adjusted and re-patched, taken from:
-Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
+Signed-off-by: Arthur Ruder <arthur.ruder@enclustra.com>
 ---
- board/xilinx/Kconfig             |  17 +++-
- board/xilinx/common/enclustra.c  |  94 ++++++++++++++++++++
+ board/xilinx/Kconfig             |  14 +++
+ board/xilinx/common/enclustra.c  |  93 +++++++++++++++++++
  board/xilinx/zynq/Makefile       |   2 +
  board/xilinx/zynq/board_mux.c    | 147 +++++++++++++++++++++++++++++++
  common/board_r.c                 |   6 ++
  drivers/mtd/nand/raw/zynq_nand.c |   7 ++
- drivers/spi/zynq_qspi.c          |  18 +++-
+ drivers/spi/zynq_qspi.c          |   8 ++
  include/init.h                   |   2 +
- 8 files changed, 288 insertions(+), 5 deletions(-)
+ 8 files changed, 279 insertions(+)
  create mode 100644 board/xilinx/common/enclustra.c
  create mode 100644 board/xilinx/zynq/board_mux.c
 
 diff --git a/board/xilinx/Kconfig b/board/xilinx/Kconfig
-index 843198fa0d..93e3ed0ecb 100644
+index 8b179835721..416a1ca2e2f 100644
 --- a/board/xilinx/Kconfig
 +++ b/board/xilinx/Kconfig
-@@ -41,7 +41,7 @@ config XILINX_PS_INIT_FILE
- endif
- 
- config XILINX_OF_BOARD_DTB_ADDR
--	hex "Default DTB pickup address"
-+	hex
- 	default 0x1000 if ARCH_VERSAL || ARCH_VERSAL_NET
- 	default 0x8000 if MICROBLAZE
- 	default 0x100000 if ARCH_ZYNQ || ARCH_ZYNQMP
-@@ -59,6 +59,21 @@ config BOOT_SCRIPT_OFFSET
+@@ -59,6 +59,20 @@ config BOOT_SCRIPT_OFFSET
  	help
  	   Specifies distro boot script offset in NAND/QSPI/NOR flash.
  
@@ -49,16 +47,15 @@ index 843198fa0d..93e3ed0ecb 100644
 +	bool "QSPI Flash Map"
 +	help
 +	  Includes device specific QSPI flash maps in the U-Boot environment
-+
  config CMD_FRU
  	bool "FRU information for product"
  	help
 diff --git a/board/xilinx/common/enclustra.c b/board/xilinx/common/enclustra.c
 new file mode 100644
-index 0000000000..cfd6389af5
+index 00000000000..9f8c93803c1
 --- /dev/null
 +++ b/board/xilinx/common/enclustra.c
-@@ -0,0 +1,94 @@
+@@ -0,0 +1,93 @@
 +// SPDX-License-Identifier: GPL-2.0+
 +/*
 + * (C) Copyright 2020 Enclustra GmbH
@@ -75,8 +72,8 @@ index 0000000000..cfd6389af5
 +#define ENCLUSTRA_ETH1ADDR_DEFAULT "00:0A:35:01:02:04"
 +
 +static struct eeprom_mem eeproms[] = {
-+	{ .mac_reader = atsha204_get_mac },
-+	{ .mac_reader = ds28_get_mac }
++	{ .mac_reader = ds28_get_mac },
++	{ .mac_reader = atsha204_get_mac }
 +};
 +
 +int enclustra_common(void)
@@ -152,9 +149,9 @@ index 0000000000..cfd6389af5
 +	return 0;
 +#endif
 +}
-+
+\ No newline at end of file
 diff --git a/board/xilinx/zynq/Makefile b/board/xilinx/zynq/Makefile
-index 8566171589..960c5de2c0 100644
+index 85661715891..e31337987c6 100644
 --- a/board/xilinx/zynq/Makefile
 +++ b/board/xilinx/zynq/Makefile
 @@ -4,6 +4,8 @@
@@ -162,13 +159,13 @@ index 8566171589..960c5de2c0 100644
  
  obj-y	:= board.o
 +obj-y	+= ../common/enclustra.o
-+obj-y   += board_mux.o
++obj-y	+= board_mux.o
  
  ifneq ($(CONFIG_XILINX_PS_INIT_FILE),"")
  PS_INIT_FILE := $(shell cd $(srctree); readlink -f $(CONFIG_XILINX_PS_INIT_FILE))
 diff --git a/board/xilinx/zynq/board_mux.c b/board/xilinx/zynq/board_mux.c
 new file mode 100644
-index 0000000000..d96a568944
+index 00000000000..c9c4255113c
 --- /dev/null
 +++ b/board/xilinx/zynq/board_mux.c
 @@ -0,0 +1,147 @@
@@ -319,8 +316,9 @@ index 0000000000..d96a568944
 +U_BOOT_CMD(zx_set_storage, 2, 0, zx_set_storage_cmd,
 +	"Set non volatile memory access",
 +	"<NAND|QSPI> - Set access for the selected memory device");
+\ No newline at end of file
 diff --git a/common/board_r.c b/common/board_r.c
-index a7967849dc..8527bb015b 100644
+index a7967849dc0..8527bb015b8 100644
 --- a/common/board_r.c
 +++ b/common/board_r.c
 @@ -732,6 +732,12 @@ static init_fnc_t init_sequence_r[] = {
@@ -337,7 +335,7 @@ index a7967849dc..8527bb015b 100644
  	INIT_FUNC_WATCHDOG_RESET
  	initr_scsi,
 diff --git a/drivers/mtd/nand/raw/zynq_nand.c b/drivers/mtd/nand/raw/zynq_nand.c
-index bacaf13c57..e601af9b52 100644
+index bacaf13c570..98f969c3f4c 100644
 --- a/drivers/mtd/nand/raw/zynq_nand.c
 +++ b/drivers/mtd/nand/raw/zynq_nand.c
 @@ -1069,6 +1069,10 @@ static int zynq_nand_check_is_16bit_bw_flash(void)
@@ -356,27 +354,16 @@ index bacaf13c57..e601af9b52 100644
  		}
  	}
 +#ifdef CONFIG_ENCLUSTRA_NANDMUX
-+        zx_set_storage("NAND");
++		zx_set_storage("NAND");
 +#endif
  
  	if (!ofnode_is_enabled(of_nand)) {
  		debug("Nand node in dt disabled\n");
 diff --git a/drivers/spi/zynq_qspi.c b/drivers/spi/zynq_qspi.c
-index c387e4aaf0..3e0ef8561e 100644
+index bb70e01bb51..0433b408e1d 100644
 --- a/drivers/spi/zynq_qspi.c
 +++ b/drivers/spi/zynq_qspi.c
-@@ -72,7 +72,9 @@ DECLARE_GLOBAL_DATA_PTR;
- #define ZYNQ_QSPI_DEFAULT_BAUD_RATE	0x2
- 
- #define ZYNQ_QSPI_FIFO_DEPTH		63
--#define ZYNQ_QSPI_WAIT			(CONFIG_SYS_HZ / 100)	/* 10 ms */
-+#ifndef CONFIG_SYS_ZYNQ_QSPI_WAIT
-+#define CONFIG_SYS_ZYNQ_QSPI_WAIT	CONFIG_SYS_HZ/100	/* 10 ms */
-+#endif
- 
- /* zynq qspi register set */
- struct zynq_qspi_regs {
-@@ -209,6 +211,10 @@ static int zynq_qspi_child_pre_probe(struct udevice *bus)
+@@ -209,6 +209,10 @@ static int zynq_qspi_child_pre_probe(struct udevice *bus)
  	return 0;
  }
  
@@ -387,7 +374,7 @@ index c387e4aaf0..3e0ef8561e 100644
  static int zynq_qspi_probe(struct udevice *bus)
  {
  	struct zynq_qspi_plat *plat = dev_get_plat(bus);
-@@ -217,6 +223,10 @@ static int zynq_qspi_probe(struct udevice *bus)
+@@ -217,6 +221,10 @@ static int zynq_qspi_probe(struct udevice *bus)
  	unsigned long clock;
  	int ret;
  
@@ -398,28 +385,8 @@ index c387e4aaf0..3e0ef8561e 100644
  	priv->regs = plat->regs;
  	priv->fifo_depth = ZYNQ_QSPI_FIFO_DEPTH;
  
-@@ -387,8 +397,8 @@ static void zynq_qspi_fill_tx_fifo(struct zynq_qspi_priv *priv, u32 size)
- 	unsigned len, offset;
- 	struct zynq_qspi_regs *regs = priv->regs;
- 	static const unsigned offsets[4] = {
--		ZYNQ_QSPI_TXD_00_01_OFFSET, ZYNQ_QSPI_TXD_00_10_OFFSET,
--		ZYNQ_QSPI_TXD_00_11_OFFSET, ZYNQ_QSPI_TXD_00_00_OFFSET };
-+		ZYNQ_QSPI_TXD_00_00_OFFSET, ZYNQ_QSPI_TXD_00_01_OFFSET,
-+		ZYNQ_QSPI_TXD_00_10_OFFSET, ZYNQ_QSPI_TXD_00_11_OFFSET };
- 
- 	while ((fifocount < size) &&
- 			(priv->bytes_to_transfer > 0)) {
-@@ -446,7 +456,7 @@ static int zynq_qspi_irq_poll(struct zynq_qspi_priv *priv)
- 	do {
- 		status = readl(&regs->isr);
- 	} while ((status == 0) &&
--		(get_timer(timeout) < ZYNQ_QSPI_WAIT));
-+		(get_timer(timeout) < CONFIG_SYS_ZYNQ_QSPI_WAIT));
- 
- 	if (status == 0) {
- 		printf("zynq_qspi_irq_poll: Timeout!\n");
 diff --git a/include/init.h b/include/init.h
-index d57a24fd00..8525883cb1 100644
+index d57a24fd00d..8525883cb16 100644
 --- a/include/init.h
 +++ b/include/init.h
 @@ -315,6 +315,8 @@ int board_early_init_f(void);
@@ -432,5 +399,5 @@ index d57a24fd00..8525883cb1 100644
  int board_early_init_r(void);
  
 -- 
-2.45.2
+2.34.1
 

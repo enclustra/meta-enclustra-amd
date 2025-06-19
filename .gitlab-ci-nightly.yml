@@ -10,7 +10,6 @@ Unit01_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu9/mercury_xu9_reference_design/Mercury_XU9_PE1_Reference_Design"
-    VERSION: "2024.2_v1.1.3"
     BASEBOARD: "PE1"
     MACHINE: "refdes-xu9-pe1"
   parallel:
@@ -23,14 +22,28 @@ Unit01_Collect:
   needs:
     - Unit01_Build
 
-# Unit02: TODO
+# Unit02
+Unit02_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/mars/mars_zx2/mars_zx2_reference_design/Mars_ZX2_ST3_Reference_Design"
+    BASEBOARD: "ST3"
+    MACHINE: "refdes-zx2-st3"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["MA-ZX2-10-2I-D9"]
+        BOOTMODE: ["sd"]
+
+Unit02_Collect:
+  extends: .collect
+  needs:
+    - Unit02_Build
 
 # Unit03
 Unit03_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu61/mercury_xu61_reference_design/Mercury_XU61_ST1_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
     BASEBOARD: "ST1"
     MACHINE: "refdes-xu61-st1"
   parallel:
@@ -48,7 +61,6 @@ Unit04_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu7/mercury_xu7_reference_design/Mercury_XU7_PE3_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
     BASEBOARD: "PE3"
     MACHINE: "refdes-xu7-pe3"
   parallel:
@@ -66,7 +78,6 @@ Unit05_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu1/mercury_xu1_reference_design/Mercury_XU1_PE1_Reference_Design"
-    VERSION: "2024.2_v1.1.3"
     BASEBOARD: "PE1"
     MACHINE: "refdes-xu1-pe1"
   parallel:
@@ -84,7 +95,6 @@ Unit06_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mars/mars_xu3/mars_xu3_reference_design/Mars_XU3_ST3_Reference_Design"
-    VERSION: "2024.2_v2.0.2"
     BASEBOARD: "ST3"
     MACHINE: "refdes-xu3-st3"
   parallel:
@@ -97,14 +107,28 @@ Unit06_Collect:
   needs:
     - Unit06_Build
 
-# Unit07: TODO
+# Unit07
+Unit07_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_zx5/mercury_zx5_reference_design/Mercury_ZX5_ST1_Reference_Design"
+    BASEBOARD: "ST1"
+    MACHINE: "refdes-zx5-st1"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["ME-ZX5-15-2I-D10"]
+        BOOTMODE: ["sd"]
+
+Unit07_Collect:
+  extends: .collect
+  needs:
+    - Unit07_Build
 
 # Unit08
 Unit08_Build:
   extends: .build
   variables:
     PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_xu8/mercury_xu8_reference_design/Mercury_XU8_PE3_Reference_Design"
-    VERSION: "2024.2_v1.0.1"
     BASEBOARD: "PE3"
     MACHINE: "refdes-xu8-pe3"
   parallel:

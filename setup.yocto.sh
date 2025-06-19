@@ -119,7 +119,9 @@ append2localconf "IMAGE_INSTALL" "pciutils" ":append"
 append2localconf "IMAGE_INSTALL" "strace" ":append"
 append2localconf "IMAGE_INSTALL" "sysstat" ":append"
 append2localconf "IMAGE_INSTALL" "run-postinsts" ":append"
-append2localconf "IMAGE_INSTALL" "libdfx" ":append"
+if [[ "$MACHINE_FINAL" == *"-xzu"* || "$MACHINE_FINAL" == *"-xu"* ]]; then
+	append2localconf "IMAGE_INSTALL" "libdfx" ":append"
+fi
 append2localconf "IMAGE_INSTALL" "udev-extraconf" ":append"
 append2localconf "IMAGE_INSTALL" "linux-xlnx-udev-rules" ":append"
 append2localconf "IMAGE_INSTALL" "packagegroup-core-boot" ":append"
@@ -131,6 +133,9 @@ append2localconf "IMAGE_INSTALL" "u-boot-tools" ":append"
 append2localconf "IMAGE_INSTALL" "iperf3" ":append"
 append2localconf "IMAGE_INSTALL" "memtester" ":append"
 append2localconf "IMAGE_INSTALL" "phytool" ":append"
+if [[ "$MACHINE_FINAL" == *"-zx"* ]]; then
+	append2localconf "INIT_MANAGER_DEFAULT" "systemd"
+fi
 
 printf "now build:\n$ . ./sources/poky/oe-init-build-env ${BUILDDIR}\n$ bitbake petalinux-image-minimal\n"
 echo "READY."
