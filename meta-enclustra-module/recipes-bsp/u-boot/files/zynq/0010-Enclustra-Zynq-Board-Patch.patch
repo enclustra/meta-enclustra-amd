@@ -72,8 +72,8 @@ index 00000000000..9f8c93803c1
 +#define ENCLUSTRA_ETH1ADDR_DEFAULT "00:0A:35:01:02:04"
 +
 +static struct eeprom_mem eeproms[] = {
-+	{ .mac_reader = atsha204_get_mac },
-+	{ .mac_reader = ds28_get_mac }
++	{ .mac_reader = ds28_get_mac },
++	{ .mac_reader = atsha204_get_mac }
 +};
 +
 +int enclustra_common(void)
