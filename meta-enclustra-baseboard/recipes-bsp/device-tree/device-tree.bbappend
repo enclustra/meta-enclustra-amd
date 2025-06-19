@@ -96,18 +96,17 @@ devicetree_do_compile:prepend:zynqmp-generic() {
     f.close()
 }
 
-## TODO verify zynq build
 devicetree_do_compile:prepend:zynq-generic() {
     if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system-top.dts")
     elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw rootwait\";|' device-tree/system.dts")
+        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw rootwait\";|' device-tree/system-top.dts")
     else:
         os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
 
     os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
 
-    f = open('device-tree/system.dts', 'a')
+    f = open('device-tree/system-top.dts', 'a')
     f.write('#include "system-user.dtsi"')
     f.close()
 }
