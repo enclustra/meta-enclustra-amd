@@ -22,7 +22,22 @@ Unit01_Collect:
   needs:
     - Unit01_Build
 
-# Unit02: TODO
+# Unit02
+Unit02_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/mars/mars_zx2/mars_zx2_reference_design/Mars_ZX2_ST3_Reference_Design"
+    BASEBOARD: "ST3"
+    MACHINE: "refdes-zx2-st3"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["MA-ZX2-10-2I-D9"]
+        BOOTMODE: ["sd"]
+
+Unit02_Collect:
+  extends: .collect
+  needs:
+    - Unit02_Build
 
 # Unit03
 Unit03_Build:
@@ -92,7 +107,22 @@ Unit06_Collect:
   needs:
     - Unit06_Build
 
-# Unit07: TODO
+# Unit07
+Unit07_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/mercury/mercury_zx5/mercury_zx5_reference_design/Mercury_ZX5_ST1_Reference_Design"
+    BASEBOARD: "ST1"
+    MACHINE: "refdes-zx5-st1"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["ME-ZX5-15-2I-D10"]
+        BOOTMODE: ["sd"]
+
+Unit07_Collect:
+  extends: .collect
+  needs:
+    - Unit07_Build
 
 # Unit08
 Unit08_Build:
