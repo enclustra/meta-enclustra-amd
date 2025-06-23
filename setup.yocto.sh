@@ -102,40 +102,6 @@ fi
 
 ## adjust generated machine
 append2localconf "MACHINE" "$MACHINE_FINAL"
-append2localconf "IMAGE_FSTYPES" "wic" ":append"
-append2localconf "IMAGE_FSTYPES" "wic.bmap" ":append"
-append2localconf "KERNEL_CLASSES" "kernel-fitimage" ":append"
-append2localconf "KERNEL_IMAGETYPES" "fitImage" ":append"
-append2localconf "IMAGE_INSTALL" "kernel-modules" ":append"
-append2localconf "IMAGE_INSTALL" "e2fsprogs-mke2fs" ":append"
-append2localconf "IMAGE_INSTALL" "fpga-manager-script" ":append"
-append2localconf "IMAGE_INSTALL" "haveged" ":append"
-append2localconf "IMAGE_INSTALL" "i2c-tools" ":append"
-append2localconf "IMAGE_INSTALL" "mtd-utils" ":append"
-append2localconf "IMAGE_INSTALL" "usbutils" ":append"
-append2localconf "IMAGE_INSTALL" "can-utils" ":append"
-append2localconf "IMAGE_INSTALL" "hdparm" ":append"
-append2localconf "IMAGE_INSTALL" "pciutils" ":append"
-append2localconf "IMAGE_INSTALL" "strace" ":append"
-append2localconf "IMAGE_INSTALL" "sysstat" ":append"
-append2localconf "IMAGE_INSTALL" "run-postinsts" ":append"
-if [[ "$MACHINE_FINAL" == *"-xzu"* || "$MACHINE_FINAL" == *"-xu"* ]]; then
-	append2localconf "IMAGE_INSTALL" "libdfx" ":append"
-fi
-append2localconf "IMAGE_INSTALL" "udev-extraconf" ":append"
-append2localconf "IMAGE_INSTALL" "linux-xlnx-udev-rules" ":append"
-append2localconf "IMAGE_INSTALL" "packagegroup-core-boot" ":append"
-append2localconf "IMAGE_INSTALL" "tcf-agent" ":append"
-append2localconf "IMAGE_INSTALL" "bridge-utils" ":append"
-append2localconf "IMAGE_INSTALL" "dosfstools" ":append"
-append2localconf "IMAGE_INSTALL" "resize-part" ":append"
-append2localconf "IMAGE_INSTALL" "u-boot-tools" ":append"
-append2localconf "IMAGE_INSTALL" "iperf3" ":append"
-append2localconf "IMAGE_INSTALL" "memtester" ":append"
-append2localconf "IMAGE_INSTALL" "phytool" ":append"
-if [[ "$MACHINE_FINAL" == *"-zx"* ]]; then
-	append2localconf "INIT_MANAGER_DEFAULT" "systemd"
-fi
 
 printf "now build:\n$ . ./sources/poky/oe-init-build-env ${BUILDDIR}\n$ bitbake petalinux-image-minimal\n"
 echo "READY."
