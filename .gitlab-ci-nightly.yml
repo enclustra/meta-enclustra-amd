@@ -140,3 +140,37 @@ Unit08_Collect:
   extends: .collect
   needs:
     - Unit08_Build
+
+# Unit09
+Unit09_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/andromeda/andromeda_xzu90/andromeda_xzu90_reference_design/Andromeda_XZU90_PE5_Reference_Design"
+    BASEBOARD: "PE5"
+    MACHINE: "refdes-xzu90-pe5"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["AM-XZU90-19EG-2I-D12E"]
+        BOOTMODE: ["sd", "emmc", "qspi"]
+
+Unit09_Collect:
+  extends: .collect
+  needs:
+    - Unit09_Build
+
+# Unit10
+Unit10_Build:
+  extends: .build
+  variables:
+    PROJECT_PATH: "Enclustra/bu-sp/andromeda/andromeda_xzu65/andromeda_xzu65_reference_design/Andromeda_XZU65_PE5_Reference_Design"
+    BASEBOARD: "PE5"
+    MACHINE: "refdes-xzu65-pe5"
+  parallel:
+    matrix:
+      - PRODUCTMODEL: ["AM-XZU65-7EV-2I-D3E"]
+        BOOTMODE: ["sd", "emmc", "qspi"]
+
+Unit010_Collect:
+  extends: .collect
+  needs:
+    - Unit10_Build
