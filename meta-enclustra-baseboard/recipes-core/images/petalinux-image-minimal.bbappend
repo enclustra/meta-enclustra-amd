@@ -3,9 +3,10 @@ IMAGE_INSTALL:append = " packagegroup-core-boot"
 IMAGE_INSTALL:append = " kernel-modules"
 IMAGE_INSTALL:append = " fpga-manager-script"
 IMAGE_INSTALL:append = " run-postinsts"
-IMAGE_INSTALL:append = " libdfx"
 IMAGE_INSTALL:append = " udev-extraconf"
 IMAGE_INSTALL:append = " linux-xlnx-udev-rules"
+
+IMAGE_INSTALL:append:zynqmp-generic = " libdfx"
 
 ## not needed packages / broken setup
 IMAGE_INSTALL:remove = "nfs-utils"
