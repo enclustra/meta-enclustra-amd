@@ -4,6 +4,9 @@ require conf/machine/zynq-generic.conf
 INIT_MANAGER ?= "systemd"
 INIT_MANAGER_DEFAULT ?= "systemd"
 
+## NB: actually zynq-generic platforms provide (older) uImage, we will go with
+## fitImage, though. It is the more recent format and follows the yocto
+## approach.
 KERNEL_CLASSES:append = " kernel-fitimage"
 KERNEL_IMAGETYPES:append = " fitImage"
 
