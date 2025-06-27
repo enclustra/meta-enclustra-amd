@@ -45,6 +45,9 @@ do_configure:prepend:xu9-module() {
 do_configure:prepend:xu65-module() {
     echo "#include \"zynqmp_enclustra_andromeda_xzu65.dtsi\"" >> ../system-user.dtsi
 }
+do_configure:prepend:xzu80-module() {
+    echo "#include \"zynqmp_enclustra_andromeda_xzu80.dtsi\"" >> ../system-user.dtsi
+}
 do_configure:prepend:xzu90-module() {
     echo "#include \"zynqmp_enclustra_andromeda_xzu90.dtsi\"" >> ../system-user.dtsi
 }
