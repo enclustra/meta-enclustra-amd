@@ -106,7 +106,7 @@
 	i2c_mgmt: i2c@ff020000 {
 		clock-frequency = <100000>;
 		atsha204a@64 {
-			compatible = "atmel,atsha204a", "atmel,atsha204-i2c";
+			compatible = "atmel,atsha204a";
 			reg = <0x64>;
 		};
 	};
