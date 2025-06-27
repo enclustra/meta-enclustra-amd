@@ -1,4 +1,3 @@
-
 / {
 	usb_phy0: phy0 {
 		compatible = "ulpi-phy";
@@ -15,7 +14,7 @@
 };
 
 &sdhci0 {
-        disable-wp;
+	disable-wp;
 };
 
 &amba {
