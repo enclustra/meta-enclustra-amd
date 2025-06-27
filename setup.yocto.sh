@@ -87,8 +87,7 @@ ${TOPDIR}/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf 
 	--hw-description ${TOPDIR}/${BINARIES}/*.xsa \
 	--require-machine "${MACHINE}" \
 	--machine-overrides "enclustra-${BOOTMODE}" \
-	--machine-name "${MACHINE}"\
-	--debug
+	--machine-name "${MACHINE}"
 
 # Get the name of the generated machine from the machine conf file name
 CONF_FILE=$(find "${BUILDDIR}/conf/machine/" -name "${MACHINE}*.conf" | head -n 1)
