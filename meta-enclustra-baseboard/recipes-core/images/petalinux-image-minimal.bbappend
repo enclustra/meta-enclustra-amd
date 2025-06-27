@@ -30,3 +30,5 @@ IMAGE_FSTYPES:remove:enclustra-qspi = " cpio"
 inherit image_types_enclustra
 IMAGE_FSTYPES:append:enclustra-qspi = " cpio_enclustra.xz"
 IMAGE_ROOTFS_SIZE:enclustra-qspi = "32768"
+
+INITRAMFS_IMAGE:enclustra-qspi = "petalinux-image-minimal"

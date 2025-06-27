@@ -10,5 +10,3 @@ inherit image_types_enclustra
 IMAGE_TYPES:append = " cpio_enclustra.xz"
 INITRAMFS_FSTYPES = "cpio_enclustra.xz"
 FIT_SUPPORTED_INITRAMFS_FSTYPES:append = " cpio_enclustra.xz"
-
-INITRAMFS_IMAGE = "petalinux-image-minimal"
