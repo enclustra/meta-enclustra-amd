@@ -9,7 +9,6 @@
 };
 
 &gem3 {
-	status = "okay";
 	/delete-property/ local-mac-address;
 	phy-mode = "rgmii-id";
 	phy-handle = <&phy3>;
@@ -37,7 +36,6 @@
 };
 
 &qspi {
-	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
 	is-dual = <0>;
@@ -54,7 +52,6 @@
 };
 
 &psgtr {
-	status = "okay";
 	clocks = <&ref100>, <&ref27>;
 	clock-names = "ref2", "ref3";
 };
@@ -71,10 +68,8 @@
 		clock-frequency = <27000000>;
 	};
 	i2c_mgmt: i2c@ff020000 {
-		status = "okay";
 		clock-frequency = <100000>;
 		atsha204a@64 {
-			status = "okay";
 			compatible = "atmel,atsha204a", "atmel,atsha204-i2c";
 			reg = <0x64>;
 		};

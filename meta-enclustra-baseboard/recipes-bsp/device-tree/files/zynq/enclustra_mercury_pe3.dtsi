@@ -10,13 +10,11 @@
 };
 
 &usb0 {
-	status = "okay";
 	dr_mode = "host";
 	usb-phy = <&usb_phy0>;
 };
 
 &sdhci0 {
-        status = "okay";
         disable-wp;
 };
 
@@ -37,7 +35,6 @@
 			reg = <0>;
 
 			lm96080@2f {
-			  	   status = "okay";
 				   compatible = "lm80";
 				   reg = <0x2f >;
 			};
@@ -57,7 +54,6 @@
 
 
 &i2c1 {
-	status = "okay";
 	clock-frequency = <100000>;
 	i2c_mux@75 {
 		compatible = "nxp,pca9547";

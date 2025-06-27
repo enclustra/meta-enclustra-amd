@@ -10,7 +10,6 @@
 };
 
 &gem3 {
-	status = "okay";
 	/delete-property/ local-mac-address;
 	// mode=rgmii-id enables additional 2ns RX and TX clock delay
 	phy-mode = "rgmii-id";
@@ -42,7 +41,6 @@
 };
 
 &gem1 {
-	status = "okay";
 	/delete-property/ local-mac-address;
 	// mode=rgmii disables additional 2ns RX and TX clock delay
 	phy-mode = "rgmii";
@@ -74,7 +72,6 @@
 };
 
 &qspi {
-	status = "okay";
 	#address-cells = <1>;
 	#size-cells = <0>;
 	is-dual = <1>;
@@ -91,7 +88,6 @@
 };
 
 &psgtr {
-	status = "okay";
 	clocks = <&ref100>, <&ref135>;
 	clock-names = "ref2", "ref3";
 };
@@ -108,10 +104,8 @@
 		clock-frequency = <135000000>;
 	};
 	i2c_mgmt: i2c@ff020000 {
-		status = "okay";
 		clock-frequency = <100000>;
 		atsha204a@64 {
-			status = "okay";
 			compatible = "atmel,atsha204a", "atmel,atsha204-i2c";
 			reg = <0x64>;
 		};
