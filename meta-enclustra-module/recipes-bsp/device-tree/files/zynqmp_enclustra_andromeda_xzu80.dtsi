@@ -2,11 +2,8 @@
 
 / {
 	aliases {
-		ethernet0 = &gem3;
-		ethernet1 = &gem1;
 		i2c0 = &i2c_mgmt;
 		i2c1 = &i2c_user;
-		serial0 = &uart0;
 	};
 };
 
