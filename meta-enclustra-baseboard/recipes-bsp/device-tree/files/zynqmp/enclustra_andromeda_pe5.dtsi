@@ -1,62 +1,46 @@
 #include <dt-bindings/phy/phy.h>
 
 &i2c_mgmt {
-	i2c-mux@74 {
+	i2c_mux@74 {
 		compatible = "nxp,pca9547";
 		reg = <0x74>;
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		i2c-mux@0 {
+		i2c_mux@0 {
 			reg = <0>;
-			ioexpander0: gpio@20 {
+			sysmon: lm96080@2f {
+				compatible = "lm80";
+				reg = <0x2f >;
+			};
+			ioexpander0: ioexpander0@20 {
+				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x20>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			ioexpander1: gpio@21 {
+			ioexpander1: ioexpander1@21 {
+				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x21>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			fanctl: lm96063@4c {
+			at24: at24@56 {
+				compatible = "atmel,24c32";
+				reg = <0x56>;
+				pagesize = <32>;
+			};
+			fan_controller: fan_controller@4c {
 				compatible = "national,lm96163";
 				reg = <0x4c>;
-			};	
-			system_monitor: lm96080@2f {
-				compatible = "national,lm80";
-				reg = <0x2f>;
-			};
-			irps5401@4e {
-				compatible = "infineon,irps5401";
-				reg = <0x4e>;
-			};
-			irps5401@47 {
-				compatible = "infineon,irps5401";
-				reg = <0x47>;
-			};
-			eeprom@56 {
-				compatible = "atmel,24c128";
-				reg = <0x56>;	
-			};
-			si5332: si5332@6a {
-				reg = <0x6a>;
 			};
 		};
-		i2c-mux@2 {
+		i2c_mux@2 {
 			reg = <2>;
-			ioexpander2: gpio@20 {
-				compatible = "nxp,pcal6416";
-				reg = <0x20>;
-				gpio-controller;
-				#gpio-cells = <2>;
-			};
-		};
-		i2c-mux@4 {
-			reg = <4>;
-			sfp28_expander: gpio@20 {
+			ioexpander2: ioexpander2@20 {
+				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x20>;
 				gpio-controller;
@@ -67,32 +51,20 @@
 };
 
 &i2c_user {
-	i2c-mux@75 {
+	i2c_mux@75 {
 		compatible = "nxp,pca9547";
 		reg = <0x75>;
 		#address-cells = <1>;
 		#size-cells = <0>;
-		i2c-mux@5 {
-			reg = <5>;
-			si5395_0: si5395-0@68 {
-				reg = <0x68>;
-			};
-			si5395_1: si5395-1@68 {
-				reg = <0x68>;
-			};
-		};
 	};
 };
 
 &sdhci1 {
-	/* no-1-8-v; */	/* for 1.0 silicon */
 	wp-inverted;
-	xlnx,mio_bank = <1>;
 };
 
 &dwc3_0 {
 	dr_mode = "otg";
-	snps,usb3_lpm_capable;
 	phy-names = "usb3-phy";
 	phys = <&psgtr 2 PHY_TYPE_USB3 0 2>;
 	maximum-speed = "super-speed";
