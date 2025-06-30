@@ -59,3 +59,19 @@
 		reg = <0x75>;
 	};
 };
+
+&zynqmp_dp_snd_pcm0 {
+	status = "disabled";
+};
+
+&zynqmp_dp_snd_pcm1 {
+	status = "disabled";
+};
+
+&zynqmp_dp_snd_card0 {
+	status = "disabled";
+};
+
+&zynqmp_dp_snd_codec0 {
+	status = "disabled";
+};
