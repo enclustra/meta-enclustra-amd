@@ -1,0 +1,272 @@
+From c46c0212dc428d6a71dcf91583a7d049c3288977 Mon Sep 17 00:00:00 2001
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Fri, 3 May 2024 21:10:53 +0000
+Subject: [PATCH 1/4] crypto: atmel-sha204a - add reading from otp zone
+
+Provide a read function reading the otp zone. The otp zone can be used for
+storing serial numbers. The otp zone, as also data zone, are only
+accessible if the chip was locked before. Locking the chip is a post
+production customization and has to be done manually i.e. not by this
+driver. Without this step the chip is pretty much not usable, where
+putting or not putting data into the otp zone is optional.
+
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ drivers/crypto/atmel-i2c.c     | 24 ++++++++++++++++++++++++
+ drivers/crypto/atmel-i2c.h     |  7 ++++++-
+ drivers/crypto/atmel-sha204a.c | 23 +++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/atmel-i2c.c b/drivers/crypto/atmel-i2c.c
+index 83a9093eff25..9c9c96a5626c 100644
+--- a/drivers/crypto/atmel-i2c.c
++++ b/drivers/crypto/atmel-i2c.c
+@@ -70,6 +70,30 @@ void atmel_i2c_init_read_cmd(struct atmel_i2c_cmd *cmd)
+ }
+ EXPORT_SYMBOL(atmel_i2c_init_read_cmd);
+ 
++int atmel_i2c_init_read_otp_cmd(struct atmel_i2c_cmd *cmd, u16 addr)
++{
++	if (addr < 0 || addr > OTP_ZONE_SIZE)
++		return -1;
++
++	cmd->word_addr = COMMAND;
++	cmd->opcode = OPCODE_READ;
++	/*
++	 * Read the word from OTP zone that may contain e.g. serial
++	 * numbers or similar if persistently pre-initialized and locked
++	 */
++	cmd->param1 = OTP_ZONE;
++	cmd->param2 = cpu_to_le16(addr);
++	cmd->count = READ_COUNT;
++
++	atmel_i2c_checksum(cmd);
++
++	cmd->msecs = MAX_EXEC_TIME_READ;
++	cmd->rxsize = READ_RSP_SIZE;
++
++	return 0;
++}
++EXPORT_SYMBOL(atmel_i2c_init_read_otp_cmd);
++
+ void atmel_i2c_init_random_cmd(struct atmel_i2c_cmd *cmd)
+ {
+ 	cmd->word_addr = COMMAND;
+diff --git a/drivers/crypto/atmel-i2c.h b/drivers/crypto/atmel-i2c.h
+index c0bd429ee2c7..f70beb6d2978 100644
+--- a/drivers/crypto/atmel-i2c.h
++++ b/drivers/crypto/atmel-i2c.h
+@@ -64,6 +64,10 @@ struct atmel_i2c_cmd {
+ 
+ /* Definitions for eeprom organization */
+ #define CONFIGURATION_ZONE		0
++#define OTP_ZONE			1
++
++/* Definitions for eeprom zone sizes */
++#define OTP_ZONE_SIZE			64
+ 
+ /* Definitions for Indexes common to all commands */
+ #define RSP_DATA_IDX			1 /* buffer index of data in response */
+@@ -177,7 +181,8 @@ void atmel_i2c_flush_queue(void);
+ 
+ int atmel_i2c_send_receive(struct i2c_client *client, struct atmel_i2c_cmd *cmd);
+ 
+-void atmel_i2c_init_read_cmd(struct atmel_i2c_cmd *cmd);
++void atmel_i2c_init_read_config_cmd(struct atmel_i2c_cmd *cmd);
++int atmel_i2c_init_read_otp_cmd(struct atmel_i2c_cmd *cmd, u16 addr);
+ void atmel_i2c_init_random_cmd(struct atmel_i2c_cmd *cmd);
+ void atmel_i2c_init_genkey_cmd(struct atmel_i2c_cmd *cmd, u16 keyid);
+ int atmel_i2c_init_ecdh_cmd(struct atmel_i2c_cmd *cmd,
+diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
+index c77f482d2a97..563a0493b492 100644
+--- a/drivers/crypto/atmel-sha204a.c
++++ b/drivers/crypto/atmel-sha204a.c
+@@ -91,6 +91,29 @@ static int atmel_sha204a_rng_read(struct hwrng *rng, void *data, size_t max,
+ 	return max;
+ }
+ 
++static int atmel_sha204a_otp_read(struct i2c_client *client, u16 addr, u8 *otp)
++{
++	struct atmel_i2c_cmd cmd;
++	int ret = -1;
++
++	if (atmel_i2c_init_read_otp_cmd(&cmd, addr) < 0) {
++		dev_err(&client->dev, "failed, invalid otp address %04X\n",
++			addr);
++		return ret;
++	}
++
++	ret = atmel_i2c_send_receive(client, &cmd);
++
++	if (cmd.data[0] == 0xff) {
++		dev_err(&client->dev, "failed, device not ready\n");
++		return -ret;
++	}
++
++	memcpy(otp, cmd.data+1, 4);
++
++	return ret;
++}
++
+ static int atmel_sha204a_probe(struct i2c_client *client)
+ {
+ 	struct atmel_i2c_client_priv *i2c_priv;
+-- 
+2.43.0
+
+
+From 3e0c73e2a5f45027f37d5bd88bd3a4856b60da1f Mon Sep 17 00:00:00 2001
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Fri, 3 May 2024 21:10:54 +0000
+Subject: [PATCH 2/4] crypto: atmel-sha204a - provide the otp content
+
+Set up sysfs for the Atmel SHA204a. Provide the content of the otp zone as
+an attribute field on the sysfs entry. Thereby make sure that if the chip
+is locked, not connected or trouble with the i2c bus, the sysfs device is
+not set up. This is mostly already handled in atmel-i2c.
+
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ drivers/crypto/atmel-sha204a.c | 45 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
+index 563a0493b492..24ffdf505023 100644
+--- a/drivers/crypto/atmel-sha204a.c
++++ b/drivers/crypto/atmel-sha204a.c
+@@ -114,6 +114,39 @@ static int atmel_sha204a_otp_read(struct i2c_client *client, u16 addr, u8 *otp)
+ 	return ret;
+ }
+ 
++static ssize_t otp_show(struct device *dev,
++			struct device_attribute *attr, char *buf)
++{
++	u16 addr;
++	u8 otp[OTP_ZONE_SIZE];
++	char *str = buf;
++	struct i2c_client *client = to_i2c_client(dev);
++	int i;
++
++	for (addr = 0; addr < OTP_ZONE_SIZE/4; addr++) {
++		if (atmel_sha204a_otp_read(client, addr, otp + addr * 4) < 0) {
++			dev_err(dev, "failed to read otp zone\n");
++			break;
++		}
++	}
++
++	for (i = 0; i < addr*2; i++)
++		str += sprintf(str, "%02X", otp[i]);
++	str += sprintf(str, "\n");
++	return str - buf;
++}
++static DEVICE_ATTR_RO(otp);
++
++static struct attribute *atmel_sha204a_attrs[] = {
++	&dev_attr_otp.attr,
++	NULL
++};
++
++static const struct attribute_group atmel_sha204a_groups = {
++	.name = "atsha204a",
++	.attrs = atmel_sha204a_attrs,
++};
++
+ static int atmel_sha204a_probe(struct i2c_client *client)
+ {
+ 	struct atmel_i2c_client_priv *i2c_priv;
+@@ -134,6 +167,16 @@ static int atmel_sha204a_probe(struct i2c_client *client)
+ 	if (ret)
+ 		dev_warn(&client->dev, "failed to register RNG (%d)\n", ret);
+ 
++	/* otp read out */
++	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
++		return -ENODEV;
++
++	ret = sysfs_create_group(&client->dev.kobj, &atmel_sha204a_groups);
++	if (ret) {
++		dev_err(&client->dev, "failed to register sysfs entry\n");
++		return ret;
++	}
++
+ 	return ret;
+ }
+ 
+@@ -146,6 +189,8 @@ static void atmel_sha204a_remove(struct i2c_client *client)
+ 		return;
+ 	}
+ 
++	sysfs_remove_group(&client->dev.kobj, &atmel_sha204a_groups);
++
+ 	kfree((void *)i2c_priv->hwrng.priv);
+ }
+ 
+-- 
+2.43.0
+
+
+From 9669994b6f04a6f632d7504fcae6d29e8a497a8c Mon Sep 17 00:00:00 2001
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Sun, 26 May 2024 10:31:28 +0000
+Subject: [PATCH 3/4] crypto: atmel-sha204a - fix negated return value
+
+Fix negated variable return value.
+
+Fixes: e05ce444e9e5 ("crypto: atmel-sha204a - add reading from otp zone")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Closes: https://lore.kernel.org/linux-crypto/34cd4179-090e-479d-b459-8d0d35dd327d@moroto.mountain/
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ drivers/crypto/atmel-sha204a.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
+index 24ffdf505023..2034f6031518 100644
+--- a/drivers/crypto/atmel-sha204a.c
++++ b/drivers/crypto/atmel-sha204a.c
+@@ -106,7 +106,7 @@ static int atmel_sha204a_otp_read(struct i2c_client *client, u16 addr, u8 *otp)
+ 
+ 	if (cmd.data[0] == 0xff) {
+ 		dev_err(&client->dev, "failed, device not ready\n");
+-		return -ret;
++		return -EINVAL;
+ 	}
+ 
+ 	memcpy(otp, cmd.data+1, 4);
+-- 
+2.43.0
+
+
+From 4e176cc69c5519f11b840f0c72c3cf9ea382dd70 Mon Sep 17 00:00:00 2001
+From: Jeff Johnson <quic_jjohnson@quicinc.com>
+Date: Sun, 2 Jun 2024 15:33:39 -0700
+Subject: [PATCH 4/4] crypto: atmel-sha204a - add missing MODULE_DESCRIPTION()
+ macro
+
+make allmodconfig && make W=1 C=1 reports:
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/crypto/atmel-sha204a.o
+
+Add the missing invocation of the MODULE_DESCRIPTION() macro.
+
+Signed-off-by: Jeff Johnson <quic_jjohnson@quicinc.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+---
+ drivers/crypto/atmel-sha204a.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/crypto/atmel-sha204a.c b/drivers/crypto/atmel-sha204a.c
+index 2034f6031518..a02d496f4c41 100644
+--- a/drivers/crypto/atmel-sha204a.c
++++ b/drivers/crypto/atmel-sha204a.c
+@@ -232,4 +232,5 @@ module_init(atmel_sha204a_init);
+ module_exit(atmel_sha204a_exit);
+ 
+ MODULE_AUTHOR("Ard Biesheuvel <ard.biesheuvel@linaro.org>");
++MODULE_DESCRIPTION("Microchip / Atmel SHA204A (I2C) driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.43.0
+

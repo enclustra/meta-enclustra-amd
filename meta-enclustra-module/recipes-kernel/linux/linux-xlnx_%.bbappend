@@ -11,6 +11,7 @@ FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/${PN}/zynqmp/${ENCLUSTRA_B
 FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/${PN}/zynq/${ENCLUSTRA_BOOTMODE}:"
 
 SRC_URI:append = " file://0001-RTC.patch"
+SRC_URI:append = " file://0010-atsha204a-read-from-otp.patch"
 
 ## (debugging) mark recipe as development version
 #DEFAULT_PREFERENCE = "-1"
