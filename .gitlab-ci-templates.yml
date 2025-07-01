@@ -31,7 +31,8 @@ variables:
         tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s|.*/BOOT-.*\.bin.*|boot.bin|' --transform='s|.*/boot\.scr.*|boot.scr|' --transform='s|.*/fitImage.*|fitImage|' ${BOOT_BIN} ${BOOT_SCR} ${FIT_IMAGE}
       else
         WIC_FILE=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name "${TARGET}-${MACHINE}*.wic")
-        tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s!.*/!!' ${WIC_FILE}
+        BMAP_FILE=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name "${TARGET}-${MACHINE}*.wic.bmap")
+        tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s!.*/!!' ${WIC_FILE} ${BMAP_FILE}
       fi
   parallel:
     matrix:
