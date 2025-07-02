@@ -23,8 +23,16 @@ variables:
     - bitbake-getvar BB_ENV_PASSTHROUGH_ADDITIONS
     - bitbake -e ${TARGET} &> ${GIT_CLONE_PATH}/${TARGET}.env
     - bitbake ${TARGET}
-    - WIC_FILE=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name ${TARGET}-${MACHINE}*.wic)
-    - tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s!.*/!!' ${WIC_FILE}
+    - |
+      if [ "${BOOTMODE}" = "qspi" ]; then
+        BOOT_BIN=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name "BOOT-${MACHINE}*.bin")
+        BOOT_SCR=${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/boot.scr
+        FIT_IMAGE=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name "fitImage-${TARGET}-${MACHINE}*.bin")
+        tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s|.*/BOOT-.*\.bin.*|boot.bin|' --transform='s|.*/boot\.scr.*|boot.scr|' --transform='s|.*/fitImage.*|fitImage|' ${BOOT_BIN} ${BOOT_SCR} ${FIT_IMAGE}
+      else
+        WIC_FILE=$(find ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}/tmp/deploy/images/*/ -type f -name "${TARGET}-${MACHINE}*.wic")
+        tar -czvf ${GIT_CLONE_PATH}/${BOOTMODE}-image.tar.gz --transform='s!.*/!!' ${WIC_FILE}
+      fi
   parallel:
     matrix:
       - PRODUCTMODEL: [""]
