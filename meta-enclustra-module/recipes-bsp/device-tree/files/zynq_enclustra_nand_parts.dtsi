@@ -1,10 +1,4 @@
-&smcc {
-	status = "okay";
-};
-
 &nfc0 {
-	status = "okay";
-
 	nand-ecc-mode = "on-die";
 	nand-bus-width = <0x8>;
 

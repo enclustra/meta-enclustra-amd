@@ -14,6 +14,7 @@ FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/files/zynq/${ENCLUSTRA_BOOTM
 SRC_URI:append = " file://0008-Enclustra-MAC-address-readout-from-EEPROM.patch"
 SRC_URI:append = " file://0012-Atsha204a-upstream-fixes.patch"
 #SRC_URI:append = " file://0040-emmc.patch"
+SRC_URI:append = " file://0050-update-ksz9131-driver.patch"
 SRC_URI:append = " file://u-boot.cfg"
 
 ## specific
@@ -26,3 +27,5 @@ SRC_URI:append:zynq-generic = " file://sf_default_speed_50mhz.cfg"
 SRC_URI:append:zx1-module = " file://u-boot-nand.cfg"
 SRC_URI:append:zx3-module = " file://u-boot-nand.cfg"
 SRC_URI:append:zx5-module = " file://u-boot-nand.cfg"
+SRC_URI:append:enclustra-qspi:qspi-64-mbytes = " file://qspi-64-mbytes.cfg"
+SRC_URI:append:enclustra-qspi:qspi-128-mbytes = " file://qspi-128-mbytes.cfg"

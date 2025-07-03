@@ -1,0 +1,1 @@
+MACHINEOVERRIDES .= ":qspi-64-mbytes"

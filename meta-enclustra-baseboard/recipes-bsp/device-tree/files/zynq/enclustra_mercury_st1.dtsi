@@ -1,4 +1,3 @@
-
 / {
 	usb_phy0: phy0 {
 		compatible = "ulpi-phy";
@@ -10,14 +9,12 @@
 };
 
 &usb0 {
-	status = "okay";
 	dr_mode = "host";
 	usb-phy = <&usb_phy0>;
 };
 
 &sdhci0 {
-        status = "okay";
-        disable-wp;
+	disable-wp;
 };
 
 &amba {

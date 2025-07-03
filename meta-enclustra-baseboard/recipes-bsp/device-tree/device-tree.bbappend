@@ -42,7 +42,7 @@ do_configure:prepend:xu8-module() {
 do_configure:prepend:xu9-module() {
     echo "#include \"zynqmp_enclustra_mercury_xu9.dtsi\"" >> ../system-user.dtsi
 }
-do_configure:prepend:xu65-module() {
+do_configure:prepend:xzu65-module() {
     echo "#include \"zynqmp_enclustra_andromeda_xzu65.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:xzu80-module() {
