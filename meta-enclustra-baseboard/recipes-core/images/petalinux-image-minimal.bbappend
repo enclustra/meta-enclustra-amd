@@ -18,10 +18,12 @@ IMAGE_INSTALL:remove:enclustra-qspi = " meson"
 IMAGE_FSTYPES:append:enclustra-sd = " wic wic.bmap"
 WKS_FILES:enclustra-sd = "mmc-image.wks"
 IMAGE_BOOT_FILES:remove:enclustra-sd = "fitImage u-boot.bin"
+IMAGE_BOOT_FILES:remove:enclustra-sd = "system.dtb"
 
 IMAGE_FSTYPES:append:enclustra-emmc = " wic wic.bmap"
 WKS_FILES:enclustra-emmc = "mmc-image.wks"
 IMAGE_BOOT_FILES:remove:enclustra-emmc = "fitImage u-boot.bin"
+IMAGE_BOOT_FILES:remove:enclustra-emmc = "system.dtb"
 
 ## remove not needed image times (slightly faster)
 IMAGE_FSTYPES:remove:enclustra-qspi = " tar.gz"
