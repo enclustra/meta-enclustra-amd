@@ -16,9 +16,6 @@ SRC_URI:append = " file://0010-atsha204a-read-from-otp.patch"
 ## (debugging) mark recipe as development version
 #DEFAULT_PREFERENCE = "-1"
 
-SRC_URI:append = " file://bsp.cfg"
-KERNEL_FEATURES:append = " bsp.cfg"
-
 SRC_URI:append = " file://kernel.cfg"
 KERNEL_FEATURES:append = " kernel.cfg"
 
