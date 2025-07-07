@@ -1,5 +1,5 @@
 &dwc3_0 {
-	dr_mode = "host";
+	dr_mode = "peripheral";
 	snps,usb3_lpm_capable;
 	maximum-speed = "high-speed";
 };
