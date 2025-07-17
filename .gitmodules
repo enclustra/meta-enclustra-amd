@@ -1,0 +1,3 @@
+[submodule "submodules/RDG"]
+	path = submodules/RDG
+	url = ../../../multiproduct/ReferenceDesignGenerator
