@@ -68,6 +68,14 @@
 			compatible = "atmel,atsha204a";
 			reg = <0x64>;
 		};
+		irps5401@43 {
+			compatible = "infineon,irps5401";
+			reg = <0x43>;
+		};
+		irps5401@4d {
+			compatible = "infineon,irps5401";
+			reg = <0x4d>;
+		};
 	};
 	i2c_user: i2c@ff020000 {};
 };
