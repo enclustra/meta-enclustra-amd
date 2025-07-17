@@ -46,6 +46,14 @@
 	};
 };
 
+&spi1 {
+	tpm: sli9670@0 {
+		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
+		reg = <0>;
+		spi-max-frequency = <1000000>;
+	};
+};
+
 &psgtr {
 	clocks = <&ref100>, <&ref135>;
 	clock-names = "ref2", "ref3";
@@ -78,4 +86,13 @@
 		};
 	};
 	i2c_user: i2c@ff020000 {};
+	gpio-tpm-reset {
+		compatible = "gpio-leds";
+		reset-mio8 {
+			label = "tpm-reset";
+			gpios = <&gpio 8 GPIO_ACTIVE_LOW>;
+			/* This gets the TPM out of reset */
+			default-state = "off";
+		};
+	};
 };
