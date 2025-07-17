@@ -19,6 +19,9 @@ resize-part \
 can-utils \
 pciutils \
 strace \
+tpm2-tools \
+libtss2 \
+libtss2-tcti-device \
 "
 
 ENCLUSTRA_LAB_IMAGE_INSTALL := " \
@@ -37,7 +40,8 @@ sysstat \
 
 ## lab infrastructure needs bmaptool
 ENCLUSTRA_LAB_NFS_IMAGE_INSTALL := " bmaptool"
-IMAGE_INSTALL:append = "${ENCLUSTRA_LAB_NFS_IMAGE_INSTALL}"
+IMAGE_INSTALL:append:enclustra-sd = "${ENCLUSTRA_LAB_NFS_IMAGE_INSTALL}"
+IMAGE_INSTALL:append:enclustra-emmc = "${ENCLUSTRA_LAB_NFS_IMAGE_INSTALL}"
 
 IMAGE_INSTALL:append:enclustra-sd = "${ENCLUSTRA_LAB_IMAGE_INSTALL}"
 IMAGE_INSTALL:append:enclustra-sd = "${ENCLUSTRA_LAB_MMC_IMAGE_INSTALL}"

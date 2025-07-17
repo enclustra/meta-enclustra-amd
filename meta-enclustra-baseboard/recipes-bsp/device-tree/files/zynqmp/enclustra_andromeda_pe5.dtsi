@@ -36,6 +36,14 @@
 				compatible = "national,lm96163";
 				reg = <0x4c>;
 			};
+			buck_converter0: irps5401@4e {
+					compatible = "infineon,irps5401";
+					reg = <0x4e>;
+			};
+			buck_converter1: irps5401@47 {
+					compatible = "infineon,irps5401";
+					reg = <0x47>;
+			};
 		};
 		i2c_mux@2 {
 			reg = <2>;

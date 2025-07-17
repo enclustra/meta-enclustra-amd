@@ -1,15 +1,65 @@
-stages:
-  - Build
+include:
+  local: .gitlab-ci-templates.yml
 
-nightly:
-  stage: Build
-  trigger:
-    include:
-      - local: .gitlab-ci-templates.yml
-      - local: .gitlab-ci-nightly.yml
-    strategy: depend
-  when: manual
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG && $CI_COMMIT_TAG =~ /release/
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push"
+      when: never
+
+stages:
+  - generate
+  - trigger
+
+variables:
+  TOOL_VERSION: "2024.2"
+
+generate-build-all-config:
+  extends: .generate
+  script:
+    - !reference [.generate, script]
+    - PYTHONPATH=$(pwd) python3 Yocto/YoctoGen.py --output_path=../../ --tool_version=${TOOL_VERSION} --generate_build
+    - cd ../../ && cat generated-build-all-config.yml
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "weekly"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
+  artifacts:
+    paths:
+      - generated-build-all-config.yml
+
+generate-nightly-config:
+  extends: .generate
+  script:
+    - !reference [.generate, script]
+    - PYTHONPATH=$(pwd) python3 Yocto/YoctoGen.py --output_path=../../ --tool_version=${TOOL_VERSION} --generate_nightly
+    - cd ../../ && cat generated-nightly-config.yml
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "nightly"
       when: always
     - if: $CI_PIPELINE_SOURCE == "web"
+  artifacts:
+    paths:
+      - generated-nightly-config.yml
+
+build-pipeline:
+  when: manual
+  stage: trigger
+  trigger:
+    strategy: depend
+    include:
+      - artifact: generated-build-all-config.yml
+        job: generate-build-all-config
+
+nightly-pipeline:
+  stage: trigger
+  trigger:
+    strategy: depend
+    include:
+      - artifact: generated-nightly-config.yml
+        job: generate-nightly-config

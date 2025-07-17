@@ -1,11 +1,24 @@
-variables:
-  BRANCH: "develop"
-  VERSION: "2024.2"
-  TARGET: "petalinux-image-minimal"
+.utils:
+  tags:
+    - docker
+  image: ${CI_REGISTRY}/enclustra-utils:latest
+
+.generate:
+  extends: .utils
+  variables:
+    GIT_SUBMODULE_DEPTH: 1
+    GIT_SUBMODULE_STRATEGY: normal
+    GIT_SUBMODULE_PATHS: submodules/RDG
+  stage: generate
+  script:
+    - cd submodules/RDG/
+    - python3 -m venv ./venv
+    - source ./venv/bin/activate
+    - python3 -m pip install --quiet --requirement ./requirements.txt
 
 .build:
-  stage: Build
-  image: ${CI_REGISTRY}/amd-yocto-enclustra:2024.2
+  stage: build
+  image: ${CI_REGISTRY}/amd-yocto-enclustra:${TOOL_VERSION}
   tags: 
     - docker
   script:
@@ -43,8 +56,8 @@ variables:
     - rm -rf ${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
   needs:
     - project: $PROJECT_PATH
-      job: RefDesBuild_$VERSION
-      ref: $BRANCH
+      job: $REF_JOB_NAME
+      ref: $REF
       artifacts: true
   artifacts:
     when: always
@@ -54,7 +67,7 @@ variables:
       - ./*.tar.gz
 
 .collect:
-  stage: Collect
+  stage: collect
   image: ${CI_REGISTRY}/enclustra-utils:latest
   tags: 
     - docker
