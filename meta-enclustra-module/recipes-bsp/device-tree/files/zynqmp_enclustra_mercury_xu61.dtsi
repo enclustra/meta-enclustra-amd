@@ -7,21 +7,27 @@
 
 &gem0 {
 	/delete-property/ local-mac-address;
+	// mode=rgmii-id enables additional 2ns RX and TX clock delay
 	phy-mode = "rgmii-id";
 	phy-handle = <&phy0>;
 	mdio {
+		// KSZ9131
 		phy0: phy@3 {
 			reg = <3>;
-			/* Delays for KSZ9131 PHY */
-			txc-skew-psec = <900>;
+
+			// 2 ns TX clock delay
+			txc-skew-psec = <0>;
 			txen-skew-psec = <0>;
+
 			txd0-skew-psec = <0>;
 			txd1-skew-psec = <0>;
 			txd2-skew-psec = <0>;
 			txd3-skew-psec = <0>;
 
+			// 2 ns RX clock delay
 			rxc-skew-psec = <0>;
 			rxdv-skew-psec = <0>;
+
 			rxd0-skew-psec = <0>;
 			rxd1-skew-psec = <0>;
 			rxd2-skew-psec = <0>;
