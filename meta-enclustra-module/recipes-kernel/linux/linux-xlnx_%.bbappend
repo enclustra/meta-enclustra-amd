@@ -10,7 +10,7 @@ ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
 FILESEXTRAPATHS:prepend:zynqmp-generic := "${THISDIR}/${PN}/zynqmp/${ENCLUSTRA_BOOTMODE}:"
 FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/${PN}/zynq/${ENCLUSTRA_BOOTMODE}:"
 
-SRC_URI:append = " file://0001-RTC.patch"
+SRC_URI:append = " file://0001-rtc-zynqmp-Ensure-correct-RTC-calibration.patch"
 SRC_URI:append = " file://0010-atsha204a-read-from-otp.patch"
 
 ## (debugging) mark recipe as development version

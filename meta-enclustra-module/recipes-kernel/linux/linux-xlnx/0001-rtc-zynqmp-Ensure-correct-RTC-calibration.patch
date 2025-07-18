@@ -1,0 +1,36 @@
+From 25fa2208b7f1d505b3738d86ae34f8fda0fa4063 Mon Sep 17 00:00:00 2001
+From: Ivan Vera <ivan.vera@enclustra.com>
+Date: Tue, 29 Oct 2024 10:54:18 +0000
+Subject: [PATCH] rtc: zynqmp: Ensure correct RTC calibration
+
+In the event of an uninitialized calibration register, ensure the register
+is reset and properly programmed during the probe sequence.
+
+Fixes documented issue:
+https://adaptivesupport.amd.com/s/article/000036886?language=en_US
+
+Signed-off-by: Ivan Vera <ivan.vera@enclustra.com>
+---
+ drivers/rtc/rtc-zynqmp.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
+index 08ed171bdab4..0cc13487b05e 100644
+--- a/drivers/rtc/rtc-zynqmp.c
++++ b/drivers/rtc/rtc-zynqmp.c
+@@ -331,9 +331,9 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
+ 		if (ret)
+ 			xrtcdev->freq = RTC_CALIB_DEF;
+ 	}
+-	ret = readl(xrtcdev->reg_base + RTC_CALIB_RD);
+-	if (!ret)
+-		writel(xrtcdev->freq, (xrtcdev->reg_base + RTC_CALIB_WR));
++
++	/* Enable unconditional re-calibration to RTC_CALIB_DEF or DTB entry. */
++	writel(xrtcdev->freq, xrtcdev->reg_base + RTC_CALIB_WR);
+ 
+ 	xlnx_init_rtc(xrtcdev);
+ 
+-- 
+2.34.1
+
