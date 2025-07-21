@@ -55,6 +55,12 @@ build-pipeline:
     include:
       - artifact: generated-build-all-config.yml
         job: generate-build-all-config
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "nightly"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "weekly"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
 
 nightly-pipeline:
   stage: trigger
@@ -63,3 +69,9 @@ nightly-pipeline:
     include:
       - artifact: generated-nightly-config.yml
         job: generate-nightly-config
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "weekly"
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "nightly"
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "web"
