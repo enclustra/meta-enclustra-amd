@@ -53,15 +53,18 @@ do_configure:prepend:xzu90-module() {
 }
 do_configure:prepend:zx1-module() {
     echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_nand_parts.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx2-module() {
     echo "#include \"zynq_enclustra_mars_zx2.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx3-module() {
     echo "#include \"zynq_enclustra_mars_zx3.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_nand_parts.dtsi\"" >> ../system-user.dtsi
 }
 do_configure:prepend:zx5-module() {
     echo "#include \"zynq_enclustra_mercury_zx5.dtsi\"" >> ../system-user.dtsi
+    echo "#include \"zynq_enclustra_nand_parts.dtsi\"" >> ../system-user.dtsi
 }
 
 ## baseboard
