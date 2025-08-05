@@ -22,6 +22,9 @@ KERNEL_FEATURES:append = " kernel.cfg"
 SRC_URI:append:xu61-module:enclustra-qspi = " file://limit_cma.cfg"
 KERNEL_FEATURES:append:xu61-module:enclustra-qspi = " limit_cma.cfg"
 
+SRC_URI:append:xzu80-module = " file://tpm_i2c.cfg"
+KERNEL_FEATURES:append:xzu80-module = " tpm_i2c.cfg"
+
 kernel_do_deploy:append:enclustra-qspi() {
 	ln -snf fitImage-${INITRAMFS_IMAGE_NAME}-${KERNEL_FIT_NAME}${KERNEL_FIT_BIN_EXT} $deployDir/fitImage
 }
