@@ -1,7 +1,8 @@
 #!/usr/bin/bash -e
 ## e.g. $0 ~/workspace/0000__yocto/binaries_AM-XZU90-19EG-2I-D12E_PE5.zip sd refdes-xzu90-pe5
+##      or: $0 ~/workspace/0000__yocto/AM-XZU90-19EG-2I-D12E_PE5.xsa sd refdes-xzu90-pe5
 die() { echo $@ ; exit 1; }
-usage() { printf "usage:\n$0 <path to binaries.zip> <bootmode: sd|emmc|qspi> <MACHINE>\n"; die "failed"; }
+usage() { printf "usage:\n$0 <path to binaries.zip or .xsa> <bootmode: sd|emmc|qspi> <MACHINE>\n"; die "failed"; }
 (( $# != 3 )) && usage
 
 append2localconf() {
@@ -39,21 +40,37 @@ SCRIPTDIR=$( dirname $0 )
 TOPDIR=$( cd $SCRIPTDIR; pwd )
 cd $TOPDIR
 
-BINARIES_ZIP="$( cd $(dirname $1); pwd )/$(basename $1)"
+# Handle .zip or .xsa input
+INPUT="$( cd $(dirname $1); pwd )/$(basename $1)"
 BOOTMODE="$2"
 MACHINE="$3"
-PRODUCTMODEL=$(basename "$1" .zip | awk -F'_' '{print $2}')
-BASEBOARD=$(basename "$1" .zip | awk -F'_' '{print $3}')
+
+case "${INPUT,,}" in
+        *.zip)
+                MODE=zip
+                PRODUCTMODEL=$(basename "$INPUT" .zip | awk -F'_' '{print $2}')
+                BASEBOARD=$(basename "$INPUT" .zip | awk -F'_' '{print $3}')
+                BINARIES=$(echo $INPUT | awk -F/ '{gsub(".(zip|ZIP)$","",$NF); print $NF}')
+                ;;
+        *.xsa)
+                MODE=xsa
+                PRODUCTMODEL=$(basename "$INPUT" .xsa | awk -F'_' '{print $2}')
+                BASEBOARD=$(basename "$INPUT" .xsa | awk -F'_' '{print $3}')
+                ;;
+        *)
+                usage
+                ;;
+esac
+
 BUILDDIR="${TOPDIR}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}"
 
 echo "TOPDIR: $TOPDIR"
 echo "BUILDDIR: $BUILDDIR"
-echo "BINARIES_ZIP: $BINARIES_ZIP"
+echo "INPUT: $INPUT"
 echo "BOOTMODE: $BOOTMODE"
 echo "MACHINE: $MACHINE"
 echo "PRODUCTMODEL: $PRODUCTMODEL"
 echo "BASEBOARD: $BASEBOARD"
-
 
 ## if not around, fetch basic layer setup
 if [ ! -d "${TOPDIR}/sources" ]; then
@@ -63,13 +80,18 @@ if [ ! -d "${TOPDIR}/sources" ]; then
 fi
 
 ## import XSA
-BINARIES=$(echo $BINARIES_ZIP | awk -F/ '{gsub(".(zip|ZIP)$","",$NF); print $NF}')
-if [ ! -d "$TOPDIR/$BINARIES" ]; then
-	test -f "$BINARIES_ZIP" || die "path to binaries zip: '$BINARIES_ZIP' is invalid"
-	mkdir $TOPDIR/$BINARIES
-	cd $TOPDIR/$BINARIES
-	unzip $BINARIES_ZIP
-	cd $TOPDIR
+if [ "$MODE" = zip ]; then
+        BINARIES_ZIP="$INPUT"
+        if [ ! -d "$TOPDIR/$BINARIES" ]; then
+                test -f "$BINARIES_ZIP" || die "path to binaries zip: '$BINARIES_ZIP' is invalid"
+                mkdir $TOPDIR/$BINARIES
+                cd $TOPDIR/$BINARIES
+                unzip $BINARIES_ZIP
+                cd $TOPDIR
+        fi
+        HW_DESCRIPTION="${TOPDIR}/${BINARIES}/*.xsa"
+else
+        HW_DESCRIPTION="$INPUT"
 fi
 
 ## this changes into ./build
@@ -78,13 +100,15 @@ fi
 # add enclustra meta-layers
 append2layers "$TOPDIR/meta-enclustra-module"
 append2layers "$TOPDIR/meta-enclustra-baseboard"
-append2layers "$TOPDIR/meta-enclustra-lab"
+if [ -d "$TOPDIR/meta-enclustra-lab" ]; then
+	append2layers "$TOPDIR/meta-enclustra-lab"
+fi
 
 ## run gen-machineconf
 # setting require-machine and machine-name to the same value ensures that the FPGA device id (like xczu5ev) is included in the generated config
-# this in turn allows the correct require machine conf to be deducted in the meta-enclustra-module layer
+# this in turn allows the correct require machine conf to be deducted in the meta-enclustra-module layer using the SOC_VARIANT variable
 ${TOPDIR}/sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf parse-xsa \
-	--hw-description ${TOPDIR}/${BINARIES}/*.xsa \
+	--hw-description ${HW_DESCRIPTION} \
 	--require-machine "${MACHINE}" \
 	--machine-overrides "enclustra-${BOOTMODE}" \
 	--machine-name "${MACHINE}"
