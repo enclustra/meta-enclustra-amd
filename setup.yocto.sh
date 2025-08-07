@@ -103,6 +103,7 @@ echo "HW_DESCRIPTION: ${HW_DESCRIPTION}"
 # add enclustra meta-layers
 append2layers "${TOPDIR}/meta-enclustra-module"
 append2layers "${TOPDIR}/meta-enclustra-baseboard"
+append2layers "$TOPDIR/meta-enclustra-refdes"
 if [ -d "${TOPDIR}/meta-enclustra-lab" ]; then
 	append2layers "${TOPDIR}/meta-enclustra-lab"
 fi
