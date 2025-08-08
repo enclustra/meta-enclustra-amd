@@ -1,36 +1,53 @@
-From 25fa2208b7f1d505b3738d86ae34f8fda0fa4063 Mon Sep 17 00:00:00 2001
+From f54131b8c18a490d17d945616d515c1c8c122926 Mon Sep 17 00:00:00 2001
 From: Ivan Vera <ivan.vera@enclustra.com>
 Date: Tue, 29 Oct 2024 10:54:18 +0000
-Subject: [PATCH] rtc: zynqmp: Ensure correct RTC calibration
+Subject: [PATCH v2 1/1] rtc: zynqmp: ensure correct RTC calibration
 
-In the event of an uninitialized calibration register, ensure the register
-is reset and properly programmed during the probe sequence.
+Currently, if the calibration register contains a value, it is assumed to
+have been configured from userspace, and no further adjustments are made.
+However, in some hardware-specific scenarios, the calibration register may
+randomly contain invalid or leftover values rather than a proper
+calibration. In such cases, no re-calibration occurs, and the devicetree
+calibration is ignored until the system has fully booted. Only after that
+should a userspace application actively reset the calibration.
+See: https://adaptivesupport.amd.com/s/article/000036886?language=en_US
 
-Fixes documented issue:
-https://adaptivesupport.amd.com/s/article/000036886?language=en_US
+The need to calibrate the RTC comes from the hardware scenario. The hardware
+is described by the devicetree. The driver has a documented optional
+binding for this RTC driver to perform calibration correction for this RTC
+driver. The devicetree property would correct directly at probing i.e. at
+boot time. However, since the referenced commit, this functionality no
+longer works as expected.
 
+About this patch:
+In cases where the calib register is dirty, now use the optional devicetree
+property for correction. If the devicetree property is set, the calib
+register is corrected to this value. If the calibration property does not
+exist, the behavior is the current behavior: In case the calib register
+already holds value, a userspace calibration is assumed and no further
+actions happens. If it does not hold value a default calibration to 0x7FFF
+is applied.
+
+Fixes: 07dcc6f9c76275d6679f28a69e042a2f9dc8f128 ("rtc: zynqmp: Add calibration set and get support")
 Signed-off-by: Ivan Vera <ivan.vera@enclustra.com>
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
 ---
- drivers/rtc/rtc-zynqmp.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/rtc/rtc-zynqmp.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-index 08ed171bdab4..0cc13487b05e 100644
+index f39102b66eac..7c793c17b24c 100644
 --- a/drivers/rtc/rtc-zynqmp.c
 +++ b/drivers/rtc/rtc-zynqmp.c
-@@ -331,9 +331,9 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
+@@ -330,6 +330,8 @@ static int xlnx_rtc_probe(struct platform_device *pdev)
+ 					   &xrtcdev->freq);
  		if (ret)
  			xrtcdev->freq = RTC_CALIB_DEF;
++		else
++			writel(xrtcdev->freq, xrtcdev->reg_base + RTC_CALIB_WR);
  	}
--	ret = readl(xrtcdev->reg_base + RTC_CALIB_RD);
--	if (!ret)
--		writel(xrtcdev->freq, (xrtcdev->reg_base + RTC_CALIB_WR));
-+
-+	/* Enable unconditional re-calibration to RTC_CALIB_DEF or DTB entry. */
-+	writel(xrtcdev->freq, xrtcdev->reg_base + RTC_CALIB_WR);
- 
- 	xlnx_init_rtc(xrtcdev);
- 
+ 	ret = readl(xrtcdev->reg_base + RTC_CALIB_RD);
+ 	if (!ret)
 -- 
-2.34.1
+2.39.5
 
