@@ -1,3 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/dts-v1/;
+/plugin/;
+
 &smcc {
 	status = "okay";
 };
@@ -8,8 +12,11 @@
 	nand-ecc-mode = "on-die";
 	nand-bus-width = <0x8>;
 
+	#address-cells = <1>;
+	#size-cells = <1>;
+
 	nand@0 {
-		reg = <0>;
+		reg = <0 0>;
 		#address-cells = <1>;
 		#size-cells = <1>;
 
