@@ -47,6 +47,22 @@ generate-nightly-config:
     paths:
       - generated-nightly-config.yml
 
+generate-release-config:
+  extends: 
+    - .release_rules
+    - .generate
+  script:
+    - !reference [.generate, script]
+    - PYTHONPATH=$(pwd) python3 Yocto/YoctoGen.py --output_path=../../ --tool_version=${TOOL_VERSION} --generate_release
+    - cd ../../ && cat generated-*.yml
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: always
+  artifacts:
+    paths:
+      - generated-lab-release-config.yml
+      - generated-build-all-release-config.yml
+
 build-pipeline:
   when: manual
   stage: trigger
@@ -75,3 +91,31 @@ nightly-pipeline:
     - if: $CI_PIPELINE_SOURCE == "schedule" && $SCHEDULE == "nightly"
       when: always
     - if: $CI_PIPELINE_SOURCE == "web"
+
+release-lab-pipeline:
+  extends: .release_rules
+  when: manual
+  stage: trigger
+  trigger:
+    strategy: depend
+    include:
+      - artifact: generated-lab-release-config.yml
+        job: generate-release-config
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_TAG
+
+release-build-all-pipeline:
+  extends: .release_rules
+  when: manual
+  stage: trigger
+  trigger:
+    strategy: depend
+    include:
+      - artifact: generated-build-all-release-config.yml
+        job: generate-release-config
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    - if: $CI_COMMIT_TAG
