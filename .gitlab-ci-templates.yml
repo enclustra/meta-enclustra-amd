@@ -46,9 +46,10 @@
     - echo "Building for ${PRODUCTMODEL} on ${BASEBOARD} with boot mode ${BOOTMODE}"
     - echo "${PRODUCTMODEL_UNDERSCORE}_${BASEBOARD}_${BOOTMODE}_CI_JOB_URL=${CI_JOB_URL}" >> "${PRODUCTMODEL}_${BASEBOARD}_${BOOTMODE}.env"
     - test -f binaries_${PRODUCTMODEL}_${BASEBOARD}.zip
-    - unzip binaries_${PRODUCTMODEL}_${BASEBOARD}.zip -d ${GIT_CLONE_PATH}
+    - mkdir ${GIT_CLONE_PATH}/binaries_${PRODUCTMODEL}_${BASEBOARD}
+    - unzip binaries_${PRODUCTMODEL}_${BASEBOARD}.zip -d ${GIT_CLONE_PATH}/binaries_${PRODUCTMODEL}_${BASEBOARD}
     - BUILDDIR=${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
-    - XSA=$(find ${GIT_CLONE_PATH}/*/binaries/${PRODUCTMODEL}/ -type f -name *.xsa)
+    - XSA=$(find ${GIT_CLONE_PATH}/binaries_${PRODUCTMODEL}_${BASEBOARD}/ -type f -name *.xsa)
     - 'echo "XSA: ${XSA}"'
     - 'echo "BUILDDIR: ${BUILDDIR}"'
     - repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.2"
