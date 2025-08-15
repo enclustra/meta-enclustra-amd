@@ -46,8 +46,28 @@
     - echo "Building for ${PRODUCTMODEL} on ${BASEBOARD} with boot mode ${BOOTMODE}"
     - echo "${PRODUCTMODEL_UNDERSCORE}_${BASEBOARD}_${BOOTMODE}_CI_JOB_URL=${CI_JOB_URL}" >> "${PRODUCTMODEL}_${BASEBOARD}_${BOOTMODE}.env"
     - test -f binaries_${PRODUCTMODEL}_${BASEBOARD}.zip
-    - ./setup.yocto.sh ${GIT_CLONE_PATH}/binaries_${PRODUCTMODEL}_${BASEBOARD}.zip ${BOOTMODE} ${MACHINE}
-    - . ./sources/poky/oe-init-build-env ${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
+    - unzip binaries_${PRODUCTMODEL}_${BASEBOARD}.zip -d ${GIT_CLONE_PATH}
+    - BUILDDIR=${GIT_CLONE_PATH}/${PRODUCTMODEL}-${BASEBOARD}-${BOOTMODE}
+    - XSA=$(find ${GIT_CLONE_PATH}/*/binaries/${PRODUCTMODEL}/ -type f -name *.xsa)
+    - 'echo "XSA: ${XSA}"'
+    - 'echo "BUILDDIR: ${BUILDDIR}"'
+    - repo init -u "https://github.com/Xilinx/yocto-manifests.git" -b "rel-v2024.2"
+    - repo sync
+    - . ./setupsdk ${BUILDDIR}
+    - bitbake-layers add-layer ${GIT_CLONE_PATH}/meta-enclustra-*
+    - cd ${GIT_CLONE_PATH}
+    - |
+      ./sources/meta-xilinx/meta-xilinx-core/gen-machine-conf/gen-machineconf parse-xsa \
+        --hw-description "${XSA}" \
+        --require-machine "${MACHINE}" \
+        --machine-overrides "enclustra-${BOOTMODE}" \
+        --machine-name "${MACHINE}"
+    - . ./sources/poky/oe-init-build-env ${BUILDDIR}
+    - 'CONF_FILE=$(find "${BUILDDIR}/conf/machine/" -name "${MACHINE}*.conf" | head -n 1)'
+    - 'MACHINE_FINAL=$(basename "${CONF_FILE}" .conf)'
+    - 'echo "MACHINE_FINAL: ${MACHINE_FINAL}"'
+    - 'echo "MACHINE=\"${MACHINE_FINAL}\"" >> "${BUILDDIR}/conf/local.conf"'
+    - bitbake-getvar MACHINE
     - bitbake-getvar DL_DIR
     - bitbake-getvar SSTATE_DIR
     - bitbake-getvar BB_ENV_PASSTHROUGH_ADDITIONS
