@@ -16,6 +16,8 @@ PROC_TUNE = "${@'cortexa53' if d.getVar('SYSTEM_DTFILE') != '' else ''}"
 ENCLUSTRA_BOOTMODE := "sd"
 ENCLUSTRA_BOOTMODE:enclustra-qspi := "qspi"
 ENCLUSTRA_BOOTMODE:enclustra-emmc := "emmc"
+DEFAULT_BOOTARGS = "earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio"
+DEFAULT_BOOTARGS:append:enclustra-qspi = " root=/dev/ram0 rw"
 
 ## append SOM dtsi
 do_configure:prepend:xu1-module() {
@@ -82,30 +84,10 @@ do_configure:append:st3-generic() {
 }
 
 ## bootargs
-devicetree_do_compile:prepend:zynqmp-generic() {
-    if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk1p2 rw rootwait\";|' device-tree/system-top.dts")
-    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "emmc":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system-top.dts")
-    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw\";|' device-tree/system-top.dts")
-    else:
-        os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
-
-    os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
-
-    f = open('device-tree/system-top.dts', 'a')
-    f.write('#include "system-user.dtsi"')
-    f.close()
-}
-
-devicetree_do_compile:prepend:zynq-generic() {
-    if d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "sd":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/mmcblk0p2 rw rootwait\";|' device-tree/system-top.dts")
-    elif d.getVar('ENCLUSTRA_BOOTMODE', 'FAILED') == "qspi":
-        os.system("sed -ie '\|bootargs =|s|.*|             bootargs = \"earlycon console=ttyPS0,115200 clk_ignore_unused uio_pdrv_genirq.of_id=generic-uio root=/dev/ram0 rw rootwait\";|' device-tree/system-top.dts")
-    else:
-        os.system("touch 'FIX_BOOTARGS_OR_FALLBACK_TO_DEFAULT'")
+# depending on the boot mode, the u-boot script adds additional variables, e.g. for the root node
+devicetree_do_compile:prepend() {
+    bootargs = d.getVar('DEFAULT_BOOTARGS')
+    os.system(f"sed -ie '\\|bootargs =|s|.*|             bootargs = \"{bootargs}\";|' device-tree/system-top.dts")
 
     os.system("sed -rie 's@(/include/.*)@// \1@' ../system-user.dtsi")
 
