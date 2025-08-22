@@ -33,6 +33,9 @@ mtd-utils \
 usbutils \
 hdparm \
 sysstat \
+"
+
+ENCLUSTRA_LAB_IMAGE_INSTALL_TPM := " \
 tpm2-tools \
 libtss2 \
 libtss2-tcti-device \
@@ -50,3 +53,7 @@ IMAGE_INSTALL:append:enclustra-emmc = "${ENCLUSTRA_LAB_IMAGE_INSTALL}"
 IMAGE_INSTALL:append:enclustra-emmc = "${ENCLUSTRA_LAB_MMC_IMAGE_INSTALL}"
 
 IMAGE_INSTALL:append:enclustra-qspi = "${ENCLUSTRA_LAB_IMAGE_INSTALL}"
+
+## add tpm tools only to relevant modules
+IMAGE_INSTALL:append:xu61-module = "${ENCLUSTRA_LAB_IMAGE_INSTALL_TPM}"
+IMAGE_INSTALL:append:xzu80-module = "${ENCLUSTRA_LAB_IMAGE_INSTALL_TPM}"
