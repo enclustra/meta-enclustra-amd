@@ -12,7 +12,7 @@ See [License](LICENSE)
 
 | Date       | Version | Comment                                                                         |
 |------------|---------|---------------------------------------------------------------------------------|
-| 07.08.2025 | 2024.2  | - Initial release of Enclustra yocto meta layers                                |
+| 22.08.2025 | 2024.2  | - Initial release of Enclustra yocto meta layers                                |
 
 ## Description
 
@@ -129,6 +129,7 @@ The expected workspace folder structure is given below:
 │   ├── meta-enclustra-baseboard
 │   ├── meta-enclustra-module
 │   ├── meta-enclustra-refdes
+│   ├── meta-enclustra-lab
 │   └── README.md
 ├── setupsdk
 └── sources
@@ -165,7 +166,9 @@ This will create the build folder and change into the `build` folder in your wor
 
 4. Add the Enclustra meta layers:
 ```bash
-bitbake-layers add-layer ../meta-enclustra-amd/meta-enclustra-*
+bitbake-layers add-layer ../meta-enclustra-amd/meta-enclustra-module
+bitbake-layers add-layer ../meta-enclustra-amd/meta-enclustra-baseboard
+bitbake-layers add-layer ../meta-enclustra-amd/meta-enclustra-refdes
 ```
 The layers should be added to `conf/bblayers.conf`:
 ```bash
