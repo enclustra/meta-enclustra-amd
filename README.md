@@ -119,7 +119,7 @@ repo sync
 
 2. Clone this repository:
 ```bash
-git clone https://github.com/enclustra/meta-enclustra-amd.git -b "scarthgap"
+git clone https://github.com/enclustra/meta-enclustra-amd.git -b "xlnx-2024.2"
 ```
 
 The expected workspace folder structure is given below:
