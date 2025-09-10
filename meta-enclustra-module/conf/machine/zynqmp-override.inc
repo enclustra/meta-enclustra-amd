@@ -1,6 +1,6 @@
 ## When using the gen-machineconf tool, the correct MACHINEOVERRIDE for cg, eg
 ## and ev should be automatically set, but is not.
-SOC_VARIANT = "${@'ev' if 'ev' in d.getVar('MACHINE') else 'eg' if 'eg' in d.getVar('MACHINE') else 'cg'}"
+SOC_VARIANT = "${@'ev' if 'ev' in d.getVar('MACHINE') else 'eg' if 'eg' in d.getVar('MACHINE') else 'cg' if 'cg' in d.getVar('MACHINE') else 'dr'}"
 
 ## Note: This is expected to implicitly depend on zynqmp-generic.conf.
 ## If it no longer does, please audit the recipes and apply the necessary
