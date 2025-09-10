@@ -21,6 +21,9 @@ SRC_URI:append:xzu65-module = " file://zynqmp_enclustra_andromeda_xzu65.dtsi"
 SRC_URI:append:xzu80-module = " file://zynqmp_enclustra_andromeda_xzu80.dtsi"
 SRC_URI:append:xzu90-module = " file://zynqmp_enclustra_andromeda_xzu90.dtsi"
 
+SRC_URI:append:xru30-module = " file://zynqmp_enclustra_andromeda_xru30.dtsi"
+SRC_URI:append:xru50-module = " file://zynqmp_enclustra_andromeda_xru50.dtsi"
+
 SRC_URI:append:zx1-module = " file://zynq_enclustra_nand_overlay.dts"
 SRC_URI:append:zx3-module = " file://zynq_enclustra_nand_overlay.dts"
 SRC_URI:append:zx5-module = " file://zynq_enclustra_nand_overlay.dts"

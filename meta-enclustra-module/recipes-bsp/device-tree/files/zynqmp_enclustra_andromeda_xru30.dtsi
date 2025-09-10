@@ -1,0 +1,100 @@
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	aliases {
+		i2c0 = &i2c_mgmt;
+		i2c1 = &i2c_user;
+	};
+};
+
+&gem3 {
+	/delete-property/ local-mac-address;
+	// mode=rgmii-id enables additional 2ns RX and TX clock delay
+	phy-mode = "rgmii-id";
+	phy-handle = <&phy0>;
+	mdio {
+		// KSZ9131
+		phy0: phy@3 {
+			reg = <3>;
+
+			// 2 ns TX clock delay
+			txc-skew-psec = <0>;
+			txen-skew-psec = <0>;
+
+			txd0-skew-psec = <0>;
+			txd1-skew-psec = <0>;
+			txd2-skew-psec = <0>;
+			txd3-skew-psec = <0>;
+
+			// 2 ns RX clock delay
+			rxc-skew-psec = <0>;
+			rxdv-skew-psec = <0>;
+
+			rxd0-skew-psec = <0>;
+			rxd1-skew-psec = <0>;
+			rxd2-skew-psec = <0>;
+			rxd3-skew-psec = <0>;
+		};
+	};
+};
+
+&qspi {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	is-dual = <0>;
+	num-cs = <1>;
+	flash0: flash@0 {
+		reg = <0x0>;
+		compatible = "spansion,s25fl512s", "jedec,spi-nor";
+		spi-rx-bus-width = <0x4>;
+		spi-tx-bus-width = <0x4>;
+		spi-max-frequency = <50000000>;
+		#address-cells = <1>;
+		#size-cells = <1>;
+	};
+};
+
+&psgtr {
+	clocks = <&ref100>, <&ref125>, <&ref100>, <&ref108>;
+	clock-names = "ref0", "ref1", "ref2", "ref3";
+};
+
+&amba {
+	ref100: ref100M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <100000000>;
+	};
+	ref125: ref125M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <125000000>;
+	};
+	ref108: ref108M {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <108000000>;
+	};
+	i2c_mgmt: i2c@ff020000 {
+		clock-frequency = <100000>;
+		atsha204a@64 {
+			compatible = "atmel,atsha204a";
+			reg = <0x64>;
+		};
+		at24@57 {
+			compatible = "atmel,24c128";
+			reg = <0x57>;
+		};
+		irps5401@4d {
+			compatible = "infineon,irps5401";
+			reg = <0x4d>;
+		};
+		irps5401@4f {
+			compatible = "infineon,irps5401";
+			reg = <0x4f>;
+		};
+	};
+	i2c_user: i2c@ff030000 {
+		clock-frequency = <100000>;
+	};
+};
