@@ -53,6 +53,12 @@ do_configure:prepend:xzu80-module() {
 do_configure:prepend:xzu90-module() {
     echo "#include \"zynqmp_enclustra_andromeda_xzu90.dtsi\"" >> ../system-user.dtsi
 }
+do_configure:prepend:xru30-module() {
+    echo "#include \"zynqmp_enclustra_andromeda_xru30.dtsi\"" >> ../system-user.dtsi
+}
+do_configure:prepend:xru50-module() {
+    echo "#include \"zynqmp_enclustra_andromeda_xru50.dtsi\"" >> ../system-user.dtsi
+}
 do_configure:prepend:zx1-module() {
     echo "#include \"zynq_enclustra_mercury_zx1.dtsi\"" >> ../system-user.dtsi
 }
