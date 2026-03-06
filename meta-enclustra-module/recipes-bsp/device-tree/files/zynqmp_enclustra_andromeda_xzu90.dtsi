@@ -23,14 +23,14 @@
 			txd2-skew-ps = <420>;
 			txd3-skew-ps = <420>;
 
-			// 2.58 ns  RX clock delay
-			rxc-skew-ps = <1860>;
-			rxdv-skew-ps = <0>;
+			// -0.18 ns TX clock delay
+			rxc-skew-ps = <0>;
+			rxdv-skew-ps = <900>;
 
-			rxd0-skew-ps = <0>;
-			rxd1-skew-ps = <0>;
-			rxd2-skew-ps = <0>;
-			rxd3-skew-ps = <0>;
+			rxd0-skew-ps = <900>;
+			rxd1-skew-ps = <900>;
+			rxd2-skew-ps = <900>;
+			rxd3-skew-ps = <900>;
 		};
 	};
 };
