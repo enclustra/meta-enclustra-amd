@@ -10,7 +10,7 @@
 	phy-mode = "rgmii";
 	phy-handle = <&phy1>;
 	mdio {
-		// KSZ9031
+		// KSZ9031 (PL)
 		phy1: phy@7 {
 			reg = <7>;
 
@@ -23,7 +23,7 @@
 			txd2-skew-ps = <420>;
 			txd3-skew-ps = <420>;
 
-			// -0.18 ns TX clock delay
+			// -0.18 ns RX clock delay
 			rxc-skew-ps = <0>;
 			rxdv-skew-ps = <900>;
 
@@ -40,7 +40,7 @@
 	phy-handle = <&phy0>;
 	phy-mode = "rgmii-id";
 	mdio {
-		// KSZ9031
+		// KSZ9031 (PS)
 		phy0: phy@3 {
 			reg = <3>;
 
