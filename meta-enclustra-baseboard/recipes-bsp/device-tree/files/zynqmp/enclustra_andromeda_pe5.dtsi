@@ -1,53 +1,58 @@
 #include <dt-bindings/phy/phy.h>
 
 &i2c_mgmt {
-	i2c_mux@74 {
+	i2c@74 {
 		compatible = "nxp,pca9547";
 		reg = <0x74>;
 		#address-cells = <1>;
 		#size-cells = <0>;
 
-		i2c_mux@0 {
+		i2c@0 {
 			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
 			sysmon: lm96080@2f {
-				compatible = "lm80";
+				compatible = "national,lm96080", "lm80";
 				reg = <0x2f >;
 			};
-			ioexpander0: ioexpander0@20 {
+			ioexpander0: gpio@20 {
 				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x20>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			ioexpander1: ioexpander1@21 {
+			ioexpander1: gpio@21 {
 				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x21>;
 				gpio-controller;
 				#gpio-cells = <2>;
 			};
-			at24: at24@56 {
-				compatible = "atmel,24c32";
+			at24: eeprom@56 {
+				compatible = "atmel,24c32"; /* size: 32 kbit = 4 kiB = 4096 bytes */
 				reg = <0x56>;
 				pagesize = <32>;
+				size = <4096>;
 			};
 			fan_controller: fan_controller@4c {
 				compatible = "national,lm96163";
 				reg = <0x4c>;
 			};
 			buck_converter0: irps5401@4e {
-					compatible = "infineon,irps5401";
+					compatible = "infineon,irps5401", "pmbus";
 					reg = <0x4e>;
 			};
 			buck_converter1: irps5401@47 {
-					compatible = "infineon,irps5401";
+					compatible = "infineon,irps5401", "pmbus";
 					reg = <0x47>;
 			};
 		};
-		i2c_mux@2 {
+		i2c@2 {
 			reg = <2>;
-			ioexpander2: ioexpander2@20 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			ioexpander2: gpio@20 {
 				status = "disabled";
 				compatible = "nxp,pcal6416";
 				reg = <0x20>;
@@ -59,7 +64,7 @@
 };
 
 &i2c_user {
-	i2c_mux@75 {
+	i2c@75 {
 		compatible = "nxp,pca9547";
 		reg = <0x75>;
 		#address-cells = <1>;
