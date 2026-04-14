@@ -57,3 +57,4 @@ IMAGE_INSTALL:append:enclustra-qspi = "${ENCLUSTRA_LAB_IMAGE_INSTALL}"
 ## add tpm tools only to relevant modules
 IMAGE_INSTALL:append:xu61-module = "${ENCLUSTRA_LAB_IMAGE_INSTALL_TPM}"
 IMAGE_INSTALL:append:xzu80-module = "${ENCLUSTRA_LAB_IMAGE_INSTALL_TPM}"
+IMAGE_INSTALL:append:xzu90-module = "${ENCLUSTRA_LAB_IMAGE_INSTALL_TPM}"
