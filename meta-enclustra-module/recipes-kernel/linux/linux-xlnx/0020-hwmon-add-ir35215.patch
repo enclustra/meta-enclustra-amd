@@ -1,0 +1,115 @@
+From 9fecb72a6a6822956720ffc76a65b5a816bd6582 Mon Sep 17 00:00:00 2001
+From: Lothar Rubusch <lothar.rubusch@enclustra.com>
+Date: Tue, 14 Apr 2026 17:10:13 +0000
+Subject: [PATCH] hwmon: add ir35215
+
+Signed-off-by: Lothar Rubusch <lothar.rubusch@enclustra.com>
+---
+ drivers/hwmon/pmbus/Kconfig   |  9 ++++++
+ drivers/hwmon/pmbus/Makefile  |  1 +
+ drivers/hwmon/pmbus/ir35215.c | 61 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 71 insertions(+)
+ create mode 100644 drivers/hwmon/pmbus/ir35215.c
+
+diff --git a/drivers/hwmon/pmbus/Kconfig b/drivers/hwmon/pmbus/Kconfig
+index 3b15f7ea6634..27676a592a93 100644
+--- a/drivers/hwmon/pmbus/Kconfig
++++ b/drivers/hwmon/pmbus/Kconfig
+@@ -123,6 +123,15 @@ config SENSORS_INSPUR_IPSPS
+ 	  This driver can also be built as a module. If so, the module will
+ 	  be called inspur-ipsps.
+ 
++config SENSORS_IR35215
++	tristate "Infineon IR35215"
++	help
++	  If you say yes here you get hardware monitoring support for the
++	  Infineon IR35215 controller.
++
++	  This driver can also be built as a module. If so, the module will
++	  be called ir35215.
++
+ config SENSORS_IR35221
+ 	tristate "Infineon IR35221"
+ 	help
+diff --git a/drivers/hwmon/pmbus/Makefile b/drivers/hwmon/pmbus/Makefile
+index dc1cec4722fe..0b7af4822228 100644
+--- a/drivers/hwmon/pmbus/Makefile
++++ b/drivers/hwmon/pmbus/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_SENSORS_FSP_3Y)	+= fsp-3y.o
+ obj-$(CONFIG_SENSORS_IBM_CFFPS)	+= ibm-cffps.o
+ obj-$(CONFIG_SENSORS_DPS920AB)	+= dps920ab.o
+ obj-$(CONFIG_SENSORS_INSPUR_IPSPS) += inspur-ipsps.o
++obj-$(CONFIG_SENSORS_IR35215)	+= ir35215.o
+ obj-$(CONFIG_SENSORS_IR35221)	+= ir35221.o
+ obj-$(CONFIG_SENSORS_IR36021)	+= ir36021.o
+ obj-$(CONFIG_SENSORS_IR38064)	+= ir38064.o
+diff --git a/drivers/hwmon/pmbus/ir35215.c b/drivers/hwmon/pmbus/ir35215.c
+new file mode 100644
+index 000000000000..a145d2bd7e7b
+--- /dev/null
++++ b/drivers/hwmon/pmbus/ir35215.c
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Hardware monitoring driver for the IR35215
++ *
++ * Copyright (C) Enclustra 2026
++ */
++
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/module.h>
++#include "pmbus.h"
++
++static struct pmbus_driver_info ir35215_info = {
++	.pages = 1,
++	.format[PSC_VOLTAGE_IN]  = linear,
++	.format[PSC_VOLTAGE_OUT] = linear,
++	.format[PSC_CURRENT_IN]  = linear,
++	.format[PSC_CURRENT_OUT] = linear,
++	.format[PSC_TEMPERATURE] = linear,
++	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT
++		| PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT
++		| PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP,
++};
++
++static int ir35215_probe(struct i2c_client *client)
++{
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_READ_BYTE_DATA |
++				     I2C_FUNC_SMBUS_READ_WORD_DATA))
++		return -ENODEV;
++
++	return pmbus_do_probe(client, &ir35215_info);
++}
++
++static const struct i2c_device_id ir35215_id[] = {
++	{ "ir35215", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, ir35215_id);
++
++static const struct of_device_id __maybe_unused ir35215_of_id[] = {
++	{ .compatible = "infineon,ir35215" },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, ir35215_of_id);
++
++static struct i2c_driver ir35215_driver = {
++	.driver = {
++		.name = "ir35215",
++	},
++	.probe    = ir35215_probe,
++	.id_table = ir35215_id,
++};
++
++module_i2c_driver(ir35215_driver);
++
++MODULE_AUTHOR("Lothar Rubusch");
++MODULE_DESCRIPTION("PMBus driver for IR35215");
++MODULE_LICENSE("GPL");
++MODULE_IMPORT_NS(PMBUS);
+-- 
+2.34.1
+
