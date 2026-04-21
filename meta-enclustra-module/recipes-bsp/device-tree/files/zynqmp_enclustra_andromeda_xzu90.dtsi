@@ -104,6 +104,10 @@
 			compatible = "atmel,atsha204a";
 			reg = <0x64>;
 		};
+		ir35215@40 {
+			compatible = "infineon,ir35215";
+			reg = <0x40>;
+		};
 		irps5401@43 {
 			compatible = "infineon,irps5401";
 			reg = <0x43>;
