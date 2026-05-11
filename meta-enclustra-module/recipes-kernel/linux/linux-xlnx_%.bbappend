@@ -12,6 +12,7 @@ FILESEXTRAPATHS:prepend:zynq-generic := "${THISDIR}/${PN}/zynq/${ENCLUSTRA_BOOTM
 
 SRC_URI:append = " file://0001-rtc-zynqmp-Ensure-correct-RTC-calibration.patch"
 SRC_URI:append = " file://0010-atsha204a-read-from-otp.patch"
+SRC_URI:append = " file://0011-atsha204a-fixes.patch"
 SRC_URI:append = " file://0020-hwmon-add-ir35215.patch"
 
 ## (debugging) mark recipe as development version

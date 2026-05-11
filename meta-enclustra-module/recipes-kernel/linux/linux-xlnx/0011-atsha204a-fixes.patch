@@ -1,0 +1,106 @@
+From 0cb6cd2e2fa56057c59519b74d203514fe2fb9f3 Mon Sep 17 00:00:00 2001
+From: Arthur Ruder <arthur.ruder@enclustra.com>
+Date: Mon, 11 May 2026 08:26:18 +0000
+Subject: [PATCH 1/2] crypto: atmel-i2c: correct wake high delay time
+
+The value specified in the data sheet of the atsha204a is 2.5 ms for tHWI (Wake High Delay to Data
+Communication).
+
+Signed-off-by: Arthur Ruder <arthur.ruder@enclustra.com>
+---
+ drivers/crypto/atmel-i2c.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/crypto/atmel-i2c.h b/drivers/crypto/atmel-i2c.h
+index f70beb6d2978..7c2a4ba73911 100644
+--- a/drivers/crypto/atmel-i2c.h
++++ b/drivers/crypto/atmel-i2c.h
+@@ -82,8 +82,8 @@ struct atmel_i2c_cmd {
+  * Wake High delay to data communication (microseconds). SDA should be stable
+  * high for this entire duration.
+  */
+-#define TWHI_MIN			1500
+-#define TWHI_MAX			1550
++#define TWHI_MIN			2500
++#define TWHI_MAX			2550
+ 
+ /* Wake Low duration */
+ #define TWLO_USEC			60
+-- 
+2.34.1
+
+
+From 093830e7c886532b4b2be637e60378945fabfd42 Mon Sep 17 00:00:00 2001
+From: Arthur Ruder <arthur.ruder@enclustra.com>
+Date: Mon, 11 May 2026 08:26:56 +0000
+Subject: [PATCH 2/2] crypto: atmel-i2c: add retries for atsha204a wakeup
+ sequence
+
+At low temperatures, the atsha204a did not wake up. Add retries to the wakeup sequence similar to the 
+approach in the u-boot driver.
+This was tested successfully at -40 °C.
+
+Signed-off-by: Arthur Ruder <arthur.ruder@enclustra.com>
+---
+ drivers/crypto/atmel-i2c.c | 44 +++++++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/crypto/atmel-i2c.c b/drivers/crypto/atmel-i2c.c
+index 9c9c96a5626c..fcc6dfd3d81a 100644
+--- a/drivers/crypto/atmel-i2c.c
++++ b/drivers/crypto/atmel-i2c.c
+@@ -193,27 +193,31 @@ static int atmel_i2c_wakeup(struct i2c_client *client)
+ {
+ 	struct atmel_i2c_client_priv *i2c_priv = i2c_get_clientdata(client);
+ 	u8 status[STATUS_RSP_SIZE];
+-	int ret;
+-
+-	/*
+-	 * The device ignores any levels or transitions on the SCL pin when the
+-	 * device is idle, asleep or during waking up. Don't check for error
+-	 * when waking up the device.
+-	 */
+-	i2c_transfer_buffer_flags(client, i2c_priv->wake_token,
+-				i2c_priv->wake_token_sz, I2C_M_IGNORE_NAK);
+-
+-	/*
+-	 * Wait to wake the device. Typical execution times for ecdh and genkey
+-	 * are around tens of milliseconds. Delta is chosen to 50 microseconds.
+-	 */
+-	usleep_range(TWHI_MIN, TWHI_MAX);
+-
+-	ret = i2c_master_recv(client, status, STATUS_SIZE);
+-	if (ret < 0)
+-		return ret;
++	int ret, retries = 10;
++
++	while (retries--) {
++		/*
++		 * The device ignores any levels or transitions on the SCL pin
++		 * when the device is idle, asleep or during waking up. Don't
++		 * check for error when waking up the device.
++		 */
++		i2c_transfer_buffer_flags(client, i2c_priv->wake_token,
++					  i2c_priv->wake_token_sz,
++					  I2C_M_IGNORE_NAK);
++
++		/*
++		 * Wait to wake the device. Typical execution times for ecdh
++		 * and genkey are around tens of milliseconds. Delta is chosen
++		 * to 50 microseconds.
++		 */
++		usleep_range(TWHI_MIN, TWHI_MAX);
++
++		ret = i2c_master_recv(client, status, STATUS_SIZE);
++		if (ret >= 0)
++			return atmel_i2c_status(&client->dev, status);
++	}
+ 
+-	return atmel_i2c_status(&client->dev, status);
++	return -ETIMEDOUT;
+ }
+ 
+ static int atmel_i2c_sleep(struct i2c_client *client)
+-- 
+2.34.1
+
