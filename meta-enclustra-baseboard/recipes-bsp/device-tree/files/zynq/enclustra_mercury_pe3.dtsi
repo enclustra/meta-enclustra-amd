@@ -26,22 +26,22 @@
 };
 
 &i2c0 {
-	i2c_mux@74 {
+	i2c@74 {
 		compatible = "nxp,pca9547";
 		reg = <0x74>;
 
-		i2c_mux@0 {
+		i2c@0 {
 			reg = <0>;
 			lm96080@2f {
-				   compatible = "lm80";
-				   reg = <0x2f >;
+				compatible = "national,lm96080", "lm80";
+				reg = <0x2f >;
 			};
 		};
-		i2c_mux@1 {
+		i2c@1 {
 			reg = <1>;
-			i2c_mux@75 {
-				   compatible = "nxp,pca9547";
-				   reg = <0x75>;
+			i2c@75 {
+				compatible = "nxp,pca9547";
+				reg = <0x75>;
 			};
 		};
 	};
@@ -49,7 +49,7 @@
 
 &i2c1 {
 	clock-frequency = <100000>;
-	i2c_mux@75 {
+	i2c@75 {
 		compatible = "nxp,pca9547";
 		reg = <0x75>;
 	};

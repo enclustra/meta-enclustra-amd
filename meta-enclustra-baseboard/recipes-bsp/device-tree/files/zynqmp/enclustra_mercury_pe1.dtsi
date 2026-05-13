@@ -27,7 +27,7 @@
 
 &i2c_mgmt {	
 	lm96080@2f {
-		compatible = "lm80";
-		reg = <0x2f >;
+		compatible = "national,lm96080", "lm80";
+		reg = <0x2f>;
 	};
 };
