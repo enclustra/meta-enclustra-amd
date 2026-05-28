@@ -121,7 +121,7 @@
 			reg = <0x4f>;
 		};
 		slb9673@2e {
-			compatible = "infineon,slb9673", "tcg,tpm_tis-i2c";
+			compatible = "infineon,slb9673", "tcg,tpm-tis-i2c";
 			reg = <0x2e>;
 		};
 	};
