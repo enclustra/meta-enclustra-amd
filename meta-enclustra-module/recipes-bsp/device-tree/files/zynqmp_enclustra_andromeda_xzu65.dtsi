@@ -118,6 +118,10 @@
 			compatible = "infineon,irps5401";
 			reg = <0x4f>;
 		};
+		tpm@2e {
+			compatible = "tcg,tpm-tis-i2c";
+			reg = <0x2e>;
+		};
 	};
 	i2c_user: i2c@ff030000 {
 		clock-frequency = <100000>;
