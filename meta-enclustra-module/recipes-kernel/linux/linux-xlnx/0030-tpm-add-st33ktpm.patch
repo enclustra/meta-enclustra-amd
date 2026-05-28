@@ -1,0 +1,110 @@
+From 52483b8d25dffb0788b616a74cbbee249dd09ff3 Mon Sep 17 00:00:00 2001
+From: Lukas Wunner <lukas@wunner.de>
+Date: Sat, 13 Jan 2024 18:10:54 +0100
+Subject: [PATCH 1/2] tpm: tis_i2c: Add compatible string nuvoton,npct75x
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Add "nuvoton,npct75x" as well as the fallback compatible string
+"tcg,tpm-tis-i2c" to the TPM TIS I²C driver.  They're used by:
+
+  arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-bonnell.dts
+  arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-everest.dts
+
+And by all accounts, NPCT75x is supported by the driver:
+
+  https://lore.kernel.org/all/60e23fd0f0ff4d1f8954034237ae8865@NTILML02.nuvoton.com/
+  https://lore.kernel.org/all/20220808220839.1006341-8-peter@pjd.dev/
+
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/tpm_tis_i2c.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
+index a897402cc36a..9511c0d50185 100644
+--- a/drivers/char/tpm/tpm_tis_i2c.c
++++ b/drivers/char/tpm/tpm_tis_i2c.c
+@@ -383,6 +383,8 @@ MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
+ #ifdef CONFIG_OF
+ static const struct of_device_id of_tis_i2c_match[] = {
+ 	{ .compatible = "infineon,slb9673", },
++	{ .compatible = "nuvoton,npct75x", },
++	{ .compatible = "tcg,tpm-tis-i2c", },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, of_tis_i2c_match);
+-- 
+2.34.1
+
+
+From d6d629d1bc182dc4e400b9be0eb3d004e15ef2ef Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Date: Mon, 9 Sep 2024 20:26:47 +0300
+Subject: [PATCH 2/2] tpm: Drop explicit initialization of struct
+ i2c_device_id::driver_data to 0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+These drivers don't use the driver_data member of struct i2c_device_id,
+so don't explicitly initialize this member.
+
+This prepares putting driver_data in an anonymous union which requires
+either no initialization or named designators. But it's also a nice
+cleanup on its own.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+---
+ drivers/char/tpm/st33zp24/i2c.c  | 2 +-
+ drivers/char/tpm/tpm_i2c_atmel.c | 2 +-
+ drivers/char/tpm/tpm_tis_i2c.c   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/char/tpm/st33zp24/i2c.c b/drivers/char/tpm/st33zp24/i2c.c
+index 661574bb0acf..9c7e05c9fd4d 100644
+--- a/drivers/char/tpm/st33zp24/i2c.c
++++ b/drivers/char/tpm/st33zp24/i2c.c
+@@ -133,7 +133,7 @@ static void st33zp24_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id st33zp24_i2c_id[] = {
+-	{TPM_ST33_I2C, 0},
++	{ TPM_ST33_I2C },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, st33zp24_i2c_id);
+diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
+index 301a95b3734f..d1d27fdfe523 100644
+--- a/drivers/char/tpm/tpm_i2c_atmel.c
++++ b/drivers/char/tpm/tpm_i2c_atmel.c
+@@ -186,7 +186,7 @@ static void i2c_atmel_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id i2c_atmel_id[] = {
+-	{I2C_DRIVER_NAME, 0},
++	{ I2C_DRIVER_NAME },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, i2c_atmel_id);
+diff --git a/drivers/char/tpm/tpm_tis_i2c.c b/drivers/char/tpm/tpm_tis_i2c.c
+index 9511c0d50185..6cd07dd34507 100644
+--- a/drivers/char/tpm/tpm_tis_i2c.c
++++ b/drivers/char/tpm/tpm_tis_i2c.c
+@@ -375,7 +375,7 @@ static void tpm_tis_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct i2c_device_id tpm_tis_i2c_id[] = {
+-	{ "tpm_tis_i2c", 0 },
++	{ "tpm_tis_i2c" },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(i2c, tpm_tis_i2c_id);
+-- 
+2.34.1
+
