@@ -1,4 +1,12 @@
 #include <dt-bindings/phy/phy.h>
+
+/ {
+	aliases {
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+	};
+};
+
 &dwc3_0 {
 	dr_mode = "host";
 	snps,usb3_lpm_capable;

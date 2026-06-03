@@ -1,5 +1,12 @@
 #include <dt-bindings/phy/phy.h>
 
+/ {
+	aliases {
+		mmc0 = &sdhci0;
+		mmc1 = &sdhci1;
+	};
+};
+
 &i2c_mgmt {
 	i2c@74 {
 		compatible = "nxp,pca9547";
