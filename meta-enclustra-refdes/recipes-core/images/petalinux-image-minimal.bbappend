@@ -15,7 +15,7 @@ IMAGE_INSTALL:remove = "nfs-utils-client"
 ## QSPI: size limited qspi variant
 IMAGE_INSTALL:remove:enclustra-qspi = " meson"
 
-IMAGE_FSTYPES:append:enclustra-sd = " wic wic.bmap"
+IMAGE_FSTYPES:append:enclustra-sd = " wic wic.gz wic.bmap"
 WKS_FILES:enclustra-sd = "mmc-image.wks"
 IMAGE_BOOT_FILES:remove:enclustra-sd = "fitImage u-boot.bin"
 IMAGE_BOOT_FILES:remove:enclustra-sd = "system.dtb"
