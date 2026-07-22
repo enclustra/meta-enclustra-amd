@@ -493,6 +493,9 @@ The following U-Boot patches are added:
 The following Linux kernel patches are added:
 - [0001-rtc-zynqmp-Ensure-correct-RTC-calibration.patch](./meta-enclustra-module/recipes-kernel/linux/linux-xlnx/0001-rtc-zynqmp-Ensure-correct-RTC-calibration.patch)
 - [0010-atsha204a-read-from-otp.patch](./meta-enclustra-module/recipes-kernel/linux/linux-xlnx/0010-atsha204a-read-from-otp.patch)
+- [0011-atsha204a-fixes.patch](./meta-enclustra-module/recipes-kernel/linux/linux-xlnx/0011-atsha204a-fixes.patch)
+- [0020-hwmon-add-ir35215.patch](./meta-enclustra-module/recipes-kernel/linux/linux-xlnx/0020-hwmon-add-ir35215.patch)
+- [0030-tpm-add-st33ktpm.patch](./meta-enclustra-module/recipes-kernel/linux/linux-xlnx/0030-tpm-add-st33ktpm.patch)
 
 ## Additional Information
 
